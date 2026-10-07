@@ -5,209 +5,284 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin | Streetwear Urbano</title>
+    <title>Streetwear Urbano</title>
 
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+
+    <header class="header">
+
+        <button
+            class="boton-menu"
+            id="abrirMenu"
+            aria-label="Abrir menú"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <img
+            src="imagenes/logo.png"
+            alt="Streetwear Urbano"
+            class="logo"
+        >
+
+        <button
+            class="carrito"
+            id="abrirCarrito"
+            aria-label="Abrir carrito"
+        >
+            🛒
+            <span
+                class="cantidad-carrito"
+                id="cantidadCarrito"
+            >
+                0
+            </span>
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         MENÚ LATERAL
+    ========================== -->
+
+    <div
+        class="fondo-menu"
+        id="fondoMenu"
+    ></div>
+
+    <aside
+        class="menu-lateral"
+        id="menuLateral"
+    >
+
+        <button
+            class="cerrar-menu"
+            id="cerrarMenu"
+        >
+            ×
+        </button>
+
+        <img
+            src="imagenes/logo.png"
+            alt="Streetwear Urbano"
+            class="logo-menu"
+        >
+
+        <nav class="categorias">
+
+            <a href="#" data-categoria="todos">
+                VER TODO
+            </a>
+
+            <a href="#" data-categoria="conjuntos">
+                CONJUNTOS
+            </a>
+
+            <a href="#" data-categoria="remeras">
+                REMERAS
+            </a>
+
+            <a href="#" data-categoria="shorts">
+                SHORTS
+            </a>
+
+            <a href="#" data-categoria="camperas">
+                CAMPERAS
+            </a>
+
+            <a href="#" data-categoria="jeans">
+                JEANS
+            </a>
+
+            <a href="#" data-categoria="accesorios">
+                ACCESORIOS
+            </a>
+
+            <a href="#" data-categoria="calzado">
+                CALZADO
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =========================
+         BANNER
+    ========================== -->
+
+    <section class="banner">
+
+        <img
+            src="imagenes/banner.jpg"
+            alt="Streetwear Urbano"
+        >
+
+    </section>
+
+
+    <!-- =========================
+         PRODUCTOS
+    ========================== -->
+
     <main>
 
-        <!-- =========================
-             LOGIN
-        ========================== -->
+        <h1 class="titulo-productos">
+            DESTACADOS
+        </h1>
 
-        <section id="login-admin">
+        <section
+            class="productos"
+            id="productos"
+        >
 
-            <h1>Panel de administración</h1>
+            <!--
+                Los productos se cargan
+                automáticamente desde Supabase
+            -->
 
-            <form id="form-login">
-
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Correo electrónico"
-                    autocomplete="email"
-                    required
-                >
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Contraseña"
-                    autocomplete="current-password"
-                    required
-                >
-
-                <button type="submit">
-                    Ingresar
-                </button>
-
-            </form>
-
-            <p id="mensaje-login"></p>
-
-        </section>
-
-
-        <!-- =========================
-             PANEL
-        ========================== -->
-
-        <section id="panel-admin" style="display: none;">
-
-            <h1>Administrar productos</h1>
-
-            <button id="cerrar-sesion" type="button">
-                Cerrar sesión
-            </button>
-
-
-            <!-- =========================
-                 FORMULARIO PRODUCTO
-            ========================== -->
-
-            <h2 id="titulo-formulario">
-                Agregar producto
-            </h2>
-
-            <form id="form-producto">
-
-                <input
-                    type="text"
-                    id="nombre"
-                    placeholder="Nombre del producto"
-                    required
-                >
-
-
-                <input
-                    type="number"
-                    id="precio"
-                    placeholder="Precio"
-                    min="0"
-                    step="0.01"
-                    required
-                >
-
-
-                <select id="categoria" required>
-
-                    <option value="">
-                        Seleccionar categoría
-                    </option>
-
-                    <option value="conjuntos">
-                        Conjuntos
-                    </option>
-
-                    <option value="remeras">
-                        Remeras
-                    </option>
-
-                    <option value="shorts">
-                        Shorts
-                    </option>
-
-                    <option value="camperas">
-                        Camperas
-                    </option>
-
-                    <option value="jeans">
-                        Jeans
-                    </option>
-
-                    <option value="accesorios">
-                        Accesorios
-                    </option>
-
-                    <option value="calzado">
-                        Calzado
-                    </option>
-
-                </select>
-
-
-                <input
-                    type="text"
-                    id="talles"
-                    placeholder="Talles: S, M, L, XL"
-                    required
-                >
-
-
-                <div class="campo-imagen">
-
-                    <label for="imagen">
-                        Imagen del producto
-                    </label>
-
-                    <input
-                        type="file"
-                        id="imagen"
-                        accept="image/*"
-                    >
-
-                    <small id="texto-imagen">
-                        Seleccioná una imagen
-                    </small>
-
-                </div>
-
-
-                <label class="campo-destacado">
-
-                    <input
-                        type="checkbox"
-                        id="destacado"
-                    >
-
-                    Producto destacado
-
-                </label>
-
-
-                <button
-                    type="submit"
-                    id="boton-guardar"
-                >
-                    Agregar producto
-                </button>
-
-
-                <button
-                    type="button"
-                    id="cancelar-edicion"
-                    style="display: none;"
-                >
-                    Cancelar edición
-                </button>
-
-            </form>
-
-
-            <p id="mensaje-producto"></p>
-
-
-            <!-- =========================
-                 PRODUCTOS
-            ========================== -->
-
-            <h2>Productos</h2>
-
-            <div id="lista-productos"></div>
+            <p id="cargandoProductos">
+                Cargando productos...
+            </p>
 
         </section>
 
     </main>
 
 
-    <!-- SUPABASE -->
+    <!-- =========================
+         FONDO DEL CARRITO
+    ========================== -->
+
+    <div
+        class="fondo-carrito"
+        id="fondoCarrito"
+    ></div>
+
+
+    <!-- =========================
+         CARRITO LATERAL
+    ========================== -->
+
+    <aside
+        class="panel-carrito"
+        id="panelCarrito"
+    >
+
+        <div class="cabecera-carrito">
+
+            <h2>
+                Tu carrito
+            </h2>
+
+            <button
+                id="cerrarCarrito"
+                class="cerrar-carrito"
+                aria-label="Cerrar carrito"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="productos-carrito"
+            id="productosCarrito"
+        >
+
+            <p class="carrito-vacio">
+                Tu carrito está vacío.
+            </p>
+
+        </div>
+
+
+        <div class="resumen-carrito">
+
+            <div class="fila-total">
+
+                <span>
+                    TOTAL
+                </span>
+
+                <strong id="totalCarrito">
+                    $0
+                </strong>
+
+            </div>
+
+
+            <button
+                id="finalizarCompra"
+                class="finalizar-compra"
+            >
+                FINALIZAR COMPRA POR WHATSAPP
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         AVISO
+    ========================== -->
+
+    <div
+        id="notificacion"
+        class="notificacion"
+    ></div>
+
+
+    <!-- =========================
+         PIE DE PÁGINA
+    ========================== -->
+
+    <footer>
+
+        <img
+            src="imagenes/logo.png"
+            alt="Streetwear Urbano"
+            class="logo-footer"
+        >
+
+        <p>
+            Indumentaria masculina
+        </p>
+
+        <p>
+            Envíos a todo el país
+        </p>
+
+        <p>
+            José María Amor 478 - B. San Francisco
+        </p>
+
+        <p class="instagram">
+            @streetwear_urbano
+        </p>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script src="admin.js"></script>
+    <script src="script.js"></script>
 
 </body>
 
