@@ -1,0 +1,507 @@
+/* =========================
+   GENERAL
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #000;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    width: 100%;
+    height: 100px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+}
+
+
+/* =========================
+   BOTÓN 3 RAYITAS
+========================= */
+
+.boton-menu {
+    width: 50px;
+    height: 45px;
+
+    border: none;
+    background: transparent;
+
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.boton-menu span {
+    width: 45px;
+    height: 5px;
+
+    background: #ff1717;
+
+    border-radius: 5px;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+    position: absolute;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 180px;
+    max-height: 80px;
+
+    object-fit: contain;
+}
+
+
+/* =========================
+   CARRITO
+========================= */
+
+.carrito {
+    position: relative;
+
+    background: transparent;
+    border: none;
+
+    color: #ff1717;
+
+    font-size: 35px;
+
+    cursor: pointer;
+}
+
+.cantidad-carrito {
+    position: absolute;
+
+    top: -7px;
+    right: -8px;
+
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #ff1717;
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   BANNER
+========================= */
+
+.banner {
+    width: 100%;
+    height: 650px;
+
+    background: #050505;
+
+    overflow: hidden;
+}
+
+.banner img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* =========================
+   TÍTULO
+========================= */
+
+.titulo-productos {
+    text-align: center;
+
+    color: #ff1717;
+
+    font-size: 26px;
+    letter-spacing: 4px;
+
+    padding: 45px 20px 30px;
+}
+
+
+/* =========================
+   PRODUCTOS
+========================= */
+
+.productos {
+    width: 100%;
+    max-width: 1300px;
+
+    margin: auto;
+
+    padding: 0 25px 70px;
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 45px 25px;
+}
+
+.producto {
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.producto:hover {
+    transform: translateY(-5px);
+}
+
+.contenedor-imagen {
+    width: 100%;
+    aspect-ratio: 1 / 1.2;
+
+    background: #080808;
+
+    overflow: hidden;
+}
+
+.contenedor-imagen img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    transition: 0.3s;
+}
+
+.producto:hover img {
+    transform: scale(1.03);
+}
+
+.producto h2 {
+    margin-top: 15px;
+
+    font-size: 18px;
+    font-weight: 400;
+
+    color: #e82424;
+
+    line-height: 1.4;
+}
+
+.precio {
+    margin-top: 12px;
+
+    color: #ff2525;
+
+    font-size: 22px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================
+   MENÚ LATERAL
+========================= */
+
+.menu-lateral {
+    position: fixed;
+
+    top: 0;
+    left: -600px;
+
+    width: 500px;
+    max-width: 88%;
+
+    height: 100vh;
+
+    background: #000;
+
+    z-index: 100;
+
+    padding: 55px 45px;
+
+    border-right: 1px solid #411010;
+
+    transition: left 0.35s ease;
+
+    overflow-y: auto;
+}
+
+.menu-lateral.activo {
+    left: 0;
+}
+
+
+/* FONDO OSCURO DETRÁS DEL MENÚ */
+
+.fondo-menu {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 90;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s;
+}
+
+.fondo-menu.activo {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* X */
+
+.cerrar-menu {
+    background: transparent;
+    border: none;
+
+    color: #ff1717;
+
+    font-size: 55px;
+    font-weight: 200;
+
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+
+/* LOGO DEL MENÚ */
+
+.logo-menu {
+    width: 220px;
+
+    display: block;
+
+    margin: 65px auto;
+}
+
+
+/* CATEGORÍAS */
+
+.categorias {
+    display: flex;
+    flex-direction: column;
+}
+
+.categorias a {
+    text-decoration: none;
+
+    color: #ff1717;
+
+    font-size: 27px;
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    padding: 30px 5px;
+
+    border-bottom: 1px solid #300808;
+
+    transition: 0.2s;
+}
+
+.categorias a:hover {
+    padding-left: 15px;
+    color: white;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    border-top: 1px solid #202020;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: #999;
+
+    line-height: 2;
+}
+
+.logo-footer {
+    width: 170px;
+
+    margin-bottom: 25px;
+}
+
+.instagram {
+    color: #ff1717;
+
+    margin-top: 15px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+    .productos {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 650px) {
+
+    .header {
+        height: 90px;
+
+        padding: 0 25px;
+    }
+
+    .boton-menu {
+        width: 45px;
+    }
+
+    .boton-menu span {
+        width: 40px;
+        height: 4px;
+    }
+
+    .logo {
+        width: 145px;
+    }
+
+    .carrito {
+        font-size: 30px;
+    }
+
+
+    /* BANNER GRANDE COMO LA REFERENCIA */
+
+    .banner {
+        height: 580px;
+    }
+
+
+    /* 2 PRODUCTOS POR FILA */
+
+    .productos {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 40px 18px;
+
+        padding: 0 20px 60px;
+    }
+
+    .titulo-productos {
+        font-size: 21px;
+
+        padding-top: 35px;
+    }
+
+    .producto h2 {
+        font-size: 16px;
+    }
+
+    .precio {
+        font-size: 20px;
+    }
+
+
+    /* MENÚ */
+
+    .menu-lateral {
+        width: 88%;
+
+        padding: 45px 30px;
+    }
+
+    .logo-menu {
+        width: 180px;
+
+        margin: 55px auto;
+    }
+
+    .categorias a {
+        font-size: 24px;
+
+        padding: 27px 3px;
+    }
+
+}
+
+
+/* =========================
+   CELULARES CHICOS
+========================= */
+
+@media (max-width: 400px) {
+
+    .logo {
+        width: 125px;
+    }
+
+    .productos {
+        padding-left: 14px;
+        padding-right: 14px;
+
+        gap: 35px 12px;
+    }
+
+    .producto h2 {
+        font-size: 14px;
+    }
+
+    .precio {
+        font-size: 17px;
+    }
+
+}
