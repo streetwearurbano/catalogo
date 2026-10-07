@@ -12,7 +12,7 @@ const supabaseClient = supabase.createClient(
 
 
 // ==========================================
-// ELEMENTOS DEL HTML
+// ELEMENTOS
 // ==========================================
 
 // Login
@@ -33,11 +33,24 @@ const formProducto = document.getElementById("form-producto");
 const nombreInput = document.getElementById("nombre");
 const precioInput = document.getElementById("precio");
 const categoriaInput = document.getElementById("categoria");
+const tallesInput = document.getElementById("talles");
 const imagenInput = document.getElementById("imagen");
 const destacadoInput = document.getElementById("destacado");
 
 const mensajeProducto = document.getElementById("mensaje-producto");
 const listaProductos = document.getElementById("lista-productos");
+
+const tituloFormulario = document.getElementById("titulo-formulario");
+const botonGuardar = document.getElementById("boton-guardar");
+const cancelarEdicion = document.getElementById("cancelar-edicion");
+const textoImagen = document.getElementById("texto-imagen");
+
+
+// ==========================================
+// ESTADO DE EDICIÓN
+// ==========================================
+
+let productoEditando = null;
 
 
 // ==========================================
@@ -77,10 +90,11 @@ formLogin.addEventListener("submit", async (e) => {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
-    const { data, error } =
+
+    const { error } =
         await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
+            email,
+            password
         });
 
 
@@ -115,6 +129,8 @@ cerrarSesion.addEventListener("click", async () => {
 
     listaProductos.innerHTML = "";
 
+    cancelarModoEdicion();
+
     mostrarLogin();
 });
 
@@ -141,7 +157,52 @@ async function comprobarSesion() {
 
 
 // ==========================================
-// AGREGAR PRODUCTO
+// SUBIR IMAGEN
+// ==========================================
+
+async function subirImagen(imagen) {
+
+    const extension =
+        imagen.name.split(".").pop();
+
+
+    const nombreArchivo =
+        `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+
+    const { error } =
+        await supabaseClient.storage
+            .from("productos")
+            .upload(
+                nombreArchivo,
+                imagen,
+                {
+                    cacheControl: "3600",
+                    upsert: false
+                }
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        throw new Error("No se pudo subir la imagen.");
+    }
+
+
+    const { data } =
+        supabaseClient.storage
+            .from("productos")
+            .getPublicUrl(nombreArchivo);
+
+
+    return data.publicUrl;
+}
+
+
+// ==========================================
+// ENVIAR FORMULARIO
 // ==========================================
 
 formProducto.addEventListener("submit", async (e) => {
@@ -149,18 +210,33 @@ formProducto.addEventListener("submit", async (e) => {
     e.preventDefault();
 
 
-    const nombre = nombreInput.value.trim();
+    const nombre =
+        nombreInput.value.trim();
 
-    const precio = Number(precioInput.value);
+    const precio =
+        Number(precioInput.value);
 
-    const categoria = categoriaInput.value;
+    const categoria =
+        categoriaInput.value;
 
-    const imagen = imagenInput.files[0];
+    const talles =
+        tallesInput.value
+            .split(",")
+            .map(talle => talle.trim())
+            .filter(talle => talle !== "")
+            .join(", ");
 
-    const destacado = destacadoInput.checked;
+    const imagen =
+        imagenInput.files[0];
+
+    const destacado =
+        destacadoInput.checked;
 
 
-    // Validaciones
+    // ======================================
+    // VALIDACIONES
+    // ======================================
+
     if (!nombre) {
 
         mensajeProducto.textContent =
@@ -188,7 +264,18 @@ formProducto.addEventListener("submit", async (e) => {
     }
 
 
-    if (!imagen) {
+    if (!talles) {
+
+        mensajeProducto.textContent =
+            "Ingresá al menos un talle.";
+
+        return;
+    }
+
+
+    // Si estamos creando, la imagen es obligatoria.
+
+    if (!productoEditando && !imagen) {
 
         mensajeProducto.textContent =
             "Seleccioná una imagen.";
@@ -198,101 +285,114 @@ formProducto.addEventListener("submit", async (e) => {
 
 
     mensajeProducto.textContent =
-        "Subiendo producto...";
+        productoEditando
+            ? "Guardando cambios..."
+            : "Subiendo producto...";
 
 
     try {
 
-        // ==================================
-        // NOMBRE ÚNICO PARA LA IMAGEN
-        // ==================================
-
-        const extension =
-            imagen.name.split(".").pop();
-
-        const nombreArchivo =
-            `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+        let imagenURL =
+            productoEditando
+                ? productoEditando.imagen_url
+                : null;
 
 
         // ==================================
-        // SUBIR IMAGEN A STORAGE
+        // SUBIR FOTO NUEVA SI HAY UNA
         // ==================================
 
-        const { error: errorImagen } =
-            await supabaseClient.storage
-                .from("productos")
-                .upload(
-                    nombreArchivo,
-                    imagen,
-                    {
-                        cacheControl: "3600",
-                        upsert: false
-                    }
-                );
+        if (imagen) {
+
+            imagenURL =
+                await subirImagen(imagen);
+        }
 
 
-        if (errorImagen) {
+        // ==================================
+        // EDITAR PRODUCTO
+        // ==================================
 
-            console.error(errorImagen);
+        if (productoEditando) {
+
+            const { error } =
+                await supabaseClient
+                    .from("productos")
+                    .update({
+                        nombre,
+                        precio,
+                        categoria,
+                        talles,
+                        imagen_url: imagenURL,
+                        destacado
+                    })
+                    .eq(
+                        "id",
+                        productoEditando.id
+                    );
+
+
+            if (error) {
+
+                console.error(error);
+
+                mensajeProducto.textContent =
+                    "No se pudieron guardar los cambios.";
+
+                return;
+            }
+
 
             mensajeProducto.textContent =
-                "Error al subir la imagen.";
+                "Producto actualizado correctamente.";
+
+            cancelarModoEdicion();
+
+            await cargarProductos();
 
             return;
         }
 
 
         // ==================================
-        // OBTENER URL PÚBLICA
+        // CREAR PRODUCTO
         // ==================================
 
-        const { data: datosURL } =
-            supabaseClient.storage
-                .from("productos")
-                .getPublicUrl(nombreArchivo);
-
-
-        const imagenURL =
-            datosURL.publicUrl;
-
-
-        // ==================================
-        // GUARDAR PRODUCTO EN LA TABLA
-        // ==================================
-
-        const { error: errorProducto } =
+        const { error } =
             await supabaseClient
                 .from("productos")
                 .insert([
                     {
-                        nombre: nombre,
-                        precio: precio,
-                        categoria: categoria,
+                        nombre,
+                        precio,
+                        categoria,
+                        talles,
                         imagen_url: imagenURL,
-                        destacado: destacado
+                        destacado
                     }
                 ]);
 
 
-        if (errorProducto) {
+        if (error) {
 
-            console.error(errorProducto);
+            console.error(error);
 
             mensajeProducto.textContent =
-                "La imagen se subió, pero hubo un error al guardar el producto.";
+                "La imagen se subió, pero no se pudo guardar el producto.";
 
             return;
         }
 
 
-        // ==================================
-        // PRODUCTO CREADO
-        // ==================================
-
         mensajeProducto.textContent =
             "Producto agregado correctamente.";
 
+
         formProducto.reset();
+
+        textoImagen.textContent =
+            "Seleccioná una imagen";
+
 
         await cargarProductos();
 
@@ -302,7 +402,8 @@ formProducto.addEventListener("submit", async (e) => {
         console.error(error);
 
         mensajeProducto.textContent =
-            "Ocurrió un error al agregar el producto.";
+            error.message ||
+            "Ocurrió un error.";
     }
 });
 
@@ -350,131 +451,257 @@ async function cargarProductos() {
     }
 
 
-    productos.forEach((producto) => {
+    productos.forEach(producto => {
 
-        const tarjeta =
-            document.createElement("div");
+        crearTarjetaAdmin(producto);
 
-        tarjeta.className =
-            "producto-admin";
-
-
-        const imagen =
-            document.createElement("img");
-
-        imagen.src =
-            producto.imagen_url;
-
-        imagen.alt =
-            producto.nombre;
+    });
+}
 
 
-        const info =
-            document.createElement("div");
+// ==========================================
+// CREAR TARJETA
+// ==========================================
 
-        info.className =
-            "producto-admin-info";
+function crearTarjetaAdmin(producto) {
 
+    const tarjeta =
+        document.createElement("div");
 
-        const titulo =
-            document.createElement("h3");
-
-        titulo.textContent =
-            producto.nombre;
-
-
-        const precio =
-            document.createElement("p");
-
-        precio.textContent =
-            `$${Number(producto.precio).toLocaleString("es-AR")}`;
+    tarjeta.className =
+        "producto-admin";
 
 
-        const categoria =
-            document.createElement("p");
+    // Imagen
+    const imagen =
+        document.createElement("img");
 
-        categoria.textContent =
-            `Categoría: ${producto.categoria}`;
+    imagen.src =
+        producto.imagen_url;
 
+    imagen.alt =
+        producto.nombre;
+
+
+    // Información
+    const info =
+        document.createElement("div");
+
+    info.className =
+        "producto-admin-info";
+
+
+    const titulo =
+        document.createElement("h3");
+
+    titulo.textContent =
+        producto.nombre;
+
+
+    const precio =
+        document.createElement("p");
+
+    precio.textContent =
+        `$${formatearPrecio(producto.precio)}`;
+
+
+    const categoria =
+        document.createElement("p");
+
+    categoria.textContent =
+        `Categoría: ${producto.categoria}`;
+
+
+    const talles =
+        document.createElement("p");
+
+    talles.textContent =
+        `Talles: ${producto.talles || "Sin talles"}`;
+
+
+    info.appendChild(titulo);
+    info.appendChild(precio);
+    info.appendChild(categoria);
+    info.appendChild(talles);
+
+
+    if (producto.destacado) {
 
         const destacado =
             document.createElement("p");
 
         destacado.textContent =
-            producto.destacado
-                ? "★ Producto destacado"
-                : "";
+            "★ Destacado";
+
+        info.appendChild(destacado);
+    }
 
 
-        // ==================================
-        // BOTONES
-        // ==================================
+    // ======================================
+    // BOTONES
+    // ======================================
 
-        const botones =
-            document.createElement("div");
+    const botones =
+        document.createElement("div");
 
-        botones.className =
-            "producto-admin-botones";
-
-
-        const botonEliminar =
-            document.createElement("button");
-
-        botonEliminar.textContent =
-            "Eliminar";
+    botones.className =
+        "producto-admin-botones";
 
 
-        botonEliminar.addEventListener(
-            "click",
-            () => eliminarProducto(producto)
-        );
+    // Editar
+    const botonEditar =
+        document.createElement("button");
+
+    botonEditar.textContent =
+        "Editar";
+
+    botonEditar.type =
+        "button";
+
+    botonEditar.addEventListener(
+        "click",
+        () => editarProducto(producto)
+    );
 
 
-        botones.appendChild(
-            botonEliminar
-        );
+    // Eliminar
+    const botonEliminar =
+        document.createElement("button");
+
+    botonEliminar.textContent =
+        "Eliminar";
+
+    botonEliminar.type =
+        "button";
+
+    botonEliminar.addEventListener(
+        "click",
+        () => eliminarProducto(producto)
+    );
 
 
-        info.appendChild(
-            titulo
-        );
+    botones.appendChild(botonEditar);
+    botones.appendChild(botonEliminar);
 
-        info.appendChild(
-            precio
-        );
+    info.appendChild(botones);
 
-        info.appendChild(
-            categoria
-        );
+    tarjeta.appendChild(imagen);
+    tarjeta.appendChild(info);
 
-
-        if (producto.destacado) {
-
-            info.appendChild(
-                destacado
-            );
-        }
+    listaProductos.appendChild(tarjeta);
+}
 
 
-        info.appendChild(
-            botones
-        );
+// ==========================================
+// EDITAR PRODUCTO
+// ==========================================
+
+function editarProducto(producto) {
+
+    productoEditando = producto;
 
 
-        tarjeta.appendChild(
-            imagen
-        );
+    nombreInput.value =
+        producto.nombre || "";
 
-        tarjeta.appendChild(
-            info
-        );
+    precioInput.value =
+        producto.precio || "";
+
+    categoriaInput.value =
+        producto.categoria || "";
+
+    tallesInput.value =
+        producto.talles || "";
+
+    destacadoInput.checked =
+        Boolean(producto.destacado);
 
 
-        listaProductos.appendChild(
-            tarjeta
-        );
+    imagenInput.value = "";
+
+
+    tituloFormulario.textContent =
+        `Editar: ${producto.nombre}`;
+
+    botonGuardar.textContent =
+        "Guardar cambios";
+
+    cancelarEdicion.style.display =
+        "block";
+
+    textoImagen.textContent =
+        "Dejá este campo vacío para mantener la imagen actual";
+
+
+    // Llevar al usuario al formulario
+    tituloFormulario.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
     });
 }
+
+
+// ==========================================
+// CANCELAR EDICIÓN
+// ==========================================
+
+function cancelarModoEdicion() {
+
+    productoEditando = null;
+
+    formProducto.reset();
+
+    tituloFormulario.textContent =
+        "Agregar producto";
+
+    botonGuardar.textContent =
+        "Agregar producto";
+
+    cancelarEdicion.style.display =
+        "none";
+
+    textoImagen.textContent =
+        "Seleccioná una imagen";
+}
+
+
+cancelarEdicion.addEventListener(
+    "click",
+    () => {
+
+        cancelarModoEdicion();
+
+        mensajeProducto.textContent = "";
+    }
+);
+
+
+// ==========================================
+// MOSTRAR NOMBRE DE FOTO
+// ==========================================
+
+imagenInput.addEventListener("change", () => {
+
+    const archivo =
+        imagenInput.files[0];
+
+
+    if (archivo) {
+
+        textoImagen.textContent =
+            archivo.name;
+
+    } else if (productoEditando) {
+
+        textoImagen.textContent =
+            "Dejá este campo vacío para mantener la imagen actual";
+
+    } else {
+
+        textoImagen.textContent =
+            "Seleccioná una imagen";
+    }
+});
 
 
 // ==========================================
@@ -498,10 +725,6 @@ async function eliminarProducto(producto) {
         "Eliminando producto...";
 
 
-    // ==================================
-    // BORRAR DE LA TABLA
-    // ==================================
-
     const { error } =
         await supabaseClient
             .from("productos")
@@ -523,6 +746,16 @@ async function eliminarProducto(producto) {
     }
 
 
+    // Si justo estábamos editando ese producto
+    if (
+        productoEditando &&
+        productoEditando.id === producto.id
+    ) {
+
+        cancelarModoEdicion();
+    }
+
+
     mensajeProducto.textContent =
         "Producto eliminado correctamente.";
 
@@ -532,15 +765,30 @@ async function eliminarProducto(producto) {
 
 
 // ==========================================
-// ESCUCHAR CAMBIOS DE SESIÓN
+// FORMATEAR PRECIO
+// ==========================================
+
+function formatearPrecio(precio) {
+
+    return Number(precio)
+        .toLocaleString(
+            "es-AR",
+            {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }
+        );
+}
+
+
+// ==========================================
+// CAMBIO DE SESIÓN
 // ==========================================
 
 supabaseClient.auth.onAuthStateChange(
-    (event, session) => {
+    (event) => {
 
-        if (
-            event === "SIGNED_OUT"
-        ) {
+        if (event === "SIGNED_OUT") {
 
             mostrarLogin();
         }
