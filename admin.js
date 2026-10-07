@@ -12,22 +12,24 @@ const supabaseClient = supabase.createClient(
 
 
 // ==========================================
-// ELEMENTOS
+// ELEMENTOS DEL LOGIN
 // ==========================================
 
-// Login
 const loginAdmin = document.getElementById("login-admin");
 const panelAdmin = document.getElementById("panel-admin");
 
 const formLogin = document.getElementById("form-login");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
-const mensajeLogin = document.getElementById("mensaje-login");
 
+const mensajeLogin = document.getElementById("mensaje-login");
 const cerrarSesion = document.getElementById("cerrar-sesion");
 
 
-// Productos
+// ==========================================
+// ELEMENTOS DE PRODUCTOS
+// ==========================================
+
 const formProducto = document.getElementById("form-producto");
 
 const nombreInput = document.getElementById("nombre");
@@ -47,7 +49,7 @@ const textoImagen = document.getElementById("texto-imagen");
 
 
 // ==========================================
-// ESTADO DE EDICIÓN
+// PRODUCTO QUE ESTAMOS EDITANDO
 // ==========================================
 
 let productoEditando = null;
@@ -93,8 +95,8 @@ formLogin.addEventListener("submit", async (e) => {
 
     const { error } =
         await supabaseClient.auth.signInWithPassword({
-            email,
-            password
+            email: email,
+            password: password
         });
 
 
@@ -136,13 +138,23 @@ cerrarSesion.addEventListener("click", async () => {
 
 
 // ==========================================
-// COMPROBAR SESIÓN
+// COMPROBAR SI YA HAY SESIÓN
 // ==========================================
 
 async function comprobarSesion() {
 
-    const { data } =
+    const { data, error } =
         await supabaseClient.auth.getSession();
+
+
+    if (error) {
+
+        console.error(error);
+
+        mostrarLogin();
+
+        return;
+    }
 
 
     if (data.session) {
@@ -157,13 +169,17 @@ async function comprobarSesion() {
 
 
 // ==========================================
-// SUBIR IMAGEN
+// SUBIR IMAGEN A STORAGE
 // ==========================================
 
 async function subirImagen(imagen) {
 
+    const partesNombre = imagen.name.split(".");
+
     const extension =
-        imagen.name.split(".").pop();
+        partesNombre.length > 1
+            ? partesNombre.pop()
+            : "jpg";
 
 
     const nombreArchivo =
@@ -187,7 +203,9 @@ async function subirImagen(imagen) {
 
         console.error(error);
 
-        throw new Error("No se pudo subir la imagen.");
+        throw new Error(
+            "No se pudo subir la imagen."
+        );
     }
 
 
@@ -202,7 +220,7 @@ async function subirImagen(imagen) {
 
 
 // ==========================================
-// ENVIAR FORMULARIO
+// AGREGAR O EDITAR PRODUCTO
 // ==========================================
 
 formProducto.addEventListener("submit", async (e) => {
@@ -210,14 +228,21 @@ formProducto.addEventListener("submit", async (e) => {
     e.preventDefault();
 
 
+    // --------------------------------------
+    // DATOS
+    // --------------------------------------
+
     const nombre =
         nombreInput.value.trim();
+
 
     const precio =
         Number(precioInput.value);
 
+
     const categoria =
         categoriaInput.value;
+
 
     const talles =
         tallesInput.value
@@ -226,16 +251,18 @@ formProducto.addEventListener("submit", async (e) => {
             .filter(talle => talle !== "")
             .join(", ");
 
+
     const imagen =
         imagenInput.files[0];
+
 
     const destacado =
         destacadoInput.checked;
 
 
-    // ======================================
+    // --------------------------------------
     // VALIDACIONES
-    // ======================================
+    // --------------------------------------
 
     if (!nombre) {
 
@@ -273,7 +300,8 @@ formProducto.addEventListener("submit", async (e) => {
     }
 
 
-    // Si estamos creando, la imagen es obligatoria.
+    // Cuando agregamos un producto,
+    // la imagen sí es obligatoria.
 
     if (!productoEditando && !imagen) {
 
@@ -292,15 +320,17 @@ formProducto.addEventListener("submit", async (e) => {
 
     try {
 
+        // Si estamos editando, empezamos
+        // utilizando la imagen que ya tenía.
+
         let imagenURL =
             productoEditando
                 ? productoEditando.imagen_url
                 : null;
 
 
-        // ==================================
-        // SUBIR FOTO NUEVA SI HAY UNA
-        // ==================================
+        // Si seleccionó una foto nueva,
+        // subimos esa foto.
 
         if (imagen) {
 
@@ -310,7 +340,7 @@ formProducto.addEventListener("submit", async (e) => {
 
 
         // ==================================
-        // EDITAR PRODUCTO
+        // EDITAR
         // ==================================
 
         if (productoEditando) {
@@ -319,12 +349,19 @@ formProducto.addEventListener("submit", async (e) => {
                 await supabaseClient
                     .from("productos")
                     .update({
-                        nombre,
-                        precio,
-                        categoria,
-                        talles,
+
+                        nombre: nombre,
+
+                        precio: precio,
+
+                        categoria: categoria,
+
+                        talles: talles,
+
                         imagen_url: imagenURL,
-                        destacado
+
+                        destacado: destacado
+
                     })
                     .eq(
                         "id",
@@ -346,6 +383,7 @@ formProducto.addEventListener("submit", async (e) => {
             mensajeProducto.textContent =
                 "Producto actualizado correctamente.";
 
+
             cancelarModoEdicion();
 
             await cargarProductos();
@@ -355,7 +393,7 @@ formProducto.addEventListener("submit", async (e) => {
 
 
         // ==================================
-        // CREAR PRODUCTO
+        // AGREGAR NUEVO
         // ==================================
 
         const { error } =
@@ -363,12 +401,19 @@ formProducto.addEventListener("submit", async (e) => {
                 .from("productos")
                 .insert([
                     {
-                        nombre,
-                        precio,
-                        categoria,
-                        talles,
+
+                        nombre: nombre,
+
+                        precio: precio,
+
+                        categoria: categoria,
+
+                        talles: talles,
+
                         imagen_url: imagenURL,
-                        destacado
+
+                        destacado: destacado
+
                     }
                 ]);
 
@@ -389,6 +434,7 @@ formProducto.addEventListener("submit", async (e) => {
 
 
         formProducto.reset();
+
 
         textoImagen.textContent =
             "Seleccioná una imagen";
@@ -424,7 +470,9 @@ async function cargarProductos() {
             .select("*")
             .order(
                 "created_at",
-                { ascending: false }
+                {
+                    ascending: false
+                }
             );
 
 
@@ -460,7 +508,7 @@ async function cargarProductos() {
 
 
 // ==========================================
-// CREAR TARJETA
+// CREAR TARJETA DEL PRODUCTO
 // ==========================================
 
 function crearTarjetaAdmin(producto) {
@@ -472,18 +520,24 @@ function crearTarjetaAdmin(producto) {
         "producto-admin";
 
 
-    // Imagen
+    // --------------------------------------
+    // IMAGEN
+    // --------------------------------------
+
     const imagen =
         document.createElement("img");
 
     imagen.src =
-        producto.imagen_url;
+        producto.imagen_url || "";
 
     imagen.alt =
-        producto.nombre;
+        producto.nombre || "Producto";
 
 
-    // Información
+    // --------------------------------------
+    // INFORMACIÓN
+    // --------------------------------------
+
     const info =
         document.createElement("div");
 
@@ -520,10 +574,17 @@ function crearTarjetaAdmin(producto) {
 
 
     info.appendChild(titulo);
+
     info.appendChild(precio);
+
     info.appendChild(categoria);
+
     info.appendChild(talles);
 
+
+    // --------------------------------------
+    // DESTACADO
+    // --------------------------------------
 
     if (producto.destacado) {
 
@@ -537,9 +598,9 @@ function crearTarjetaAdmin(producto) {
     }
 
 
-    // ======================================
+    // --------------------------------------
     // BOTONES
-    // ======================================
+    // --------------------------------------
 
     const botones =
         document.createElement("div");
@@ -548,47 +609,76 @@ function crearTarjetaAdmin(producto) {
         "producto-admin-botones";
 
 
-    // Editar
+    // EDITAR
+
     const botonEditar =
         document.createElement("button");
-
-    botonEditar.textContent =
-        "Editar";
 
     botonEditar.type =
         "button";
 
+    botonEditar.textContent =
+        "Editar";
+
+
     botonEditar.addEventListener(
         "click",
-        () => editarProducto(producto)
+        () => {
+
+            editarProducto(producto);
+
+        }
     );
 
 
-    // Eliminar
+    // ELIMINAR
+
     const botonEliminar =
         document.createElement("button");
-
-    botonEliminar.textContent =
-        "Eliminar";
 
     botonEliminar.type =
         "button";
 
+    botonEliminar.textContent =
+        "Eliminar";
+
+
     botonEliminar.addEventListener(
         "click",
-        () => eliminarProducto(producto)
+        () => {
+
+            eliminarProducto(producto);
+
+        }
     );
 
 
-    botones.appendChild(botonEditar);
-    botones.appendChild(botonEliminar);
+    botones.appendChild(
+        botonEditar
+    );
 
-    info.appendChild(botones);
+    botones.appendChild(
+        botonEliminar
+    );
 
-    tarjeta.appendChild(imagen);
-    tarjeta.appendChild(info);
 
-    listaProductos.appendChild(tarjeta);
+    info.appendChild(
+        botones
+    );
+
+
+    tarjeta.appendChild(
+        imagen
+    );
+
+    tarjeta.appendChild(
+        info
+    );
+
+
+    listaProductos.appendChild(
+        tarjeta
+    );
 }
 
 
@@ -598,42 +688,51 @@ function crearTarjetaAdmin(producto) {
 
 function editarProducto(producto) {
 
-    productoEditando = producto;
+    productoEditando =
+        producto;
 
 
     nombreInput.value =
         producto.nombre || "";
 
+
     precioInput.value =
         producto.precio || "";
+
 
     categoriaInput.value =
         producto.categoria || "";
 
+
     tallesInput.value =
         producto.talles || "";
+
 
     destacadoInput.checked =
         Boolean(producto.destacado);
 
 
+    // Limpiamos solamente el input
+    // de archivo.
     imagenInput.value = "";
 
 
     tituloFormulario.textContent =
         `Editar: ${producto.nombre}`;
 
+
     botonGuardar.textContent =
         "Guardar cambios";
 
+
     cancelarEdicion.style.display =
         "block";
+
 
     textoImagen.textContent =
         "Dejá este campo vacío para mantener la imagen actual";
 
 
-    // Llevar al usuario al formulario
     tituloFormulario.scrollIntoView({
         behavior: "smooth",
         block: "start"
@@ -647,18 +746,24 @@ function editarProducto(producto) {
 
 function cancelarModoEdicion() {
 
-    productoEditando = null;
+    productoEditando =
+        null;
+
 
     formProducto.reset();
+
 
     tituloFormulario.textContent =
         "Agregar producto";
 
+
     botonGuardar.textContent =
         "Agregar producto";
 
+
     cancelarEdicion.style.display =
         "none";
+
 
     textoImagen.textContent =
         "Seleccioná una imagen";
@@ -671,37 +776,42 @@ cancelarEdicion.addEventListener(
 
         cancelarModoEdicion();
 
-        mensajeProducto.textContent = "";
+        mensajeProducto.textContent =
+            "";
+
     }
 );
 
 
 // ==========================================
-// MOSTRAR NOMBRE DE FOTO
+// MOSTRAR NOMBRE DE LA FOTO
 // ==========================================
 
-imagenInput.addEventListener("change", () => {
+imagenInput.addEventListener(
+    "change",
+    () => {
 
-    const archivo =
-        imagenInput.files[0];
+        const archivo =
+            imagenInput.files[0];
 
 
-    if (archivo) {
+        if (archivo) {
 
-        textoImagen.textContent =
-            archivo.name;
+            textoImagen.textContent =
+                archivo.name;
 
-    } else if (productoEditando) {
+        } else if (productoEditando) {
 
-        textoImagen.textContent =
-            "Dejá este campo vacío para mantener la imagen actual";
+            textoImagen.textContent =
+                "Dejá este campo vacío para mantener la imagen actual";
 
-    } else {
+        } else {
 
-        textoImagen.textContent =
-            "Seleccioná una imagen";
+            textoImagen.textContent =
+                "Seleccioná una imagen";
+        }
     }
-});
+);
 
 
 // ==========================================
@@ -717,6 +827,7 @@ async function eliminarProducto(producto) {
 
 
     if (!confirmar) {
+
         return;
     }
 
@@ -746,7 +857,9 @@ async function eliminarProducto(producto) {
     }
 
 
-    // Si justo estábamos editando ese producto
+    // Si estaba editando justamente
+    // el producto que eliminó.
+
     if (
         productoEditando &&
         productoEditando.id === producto.id
@@ -782,7 +895,7 @@ function formatearPrecio(precio) {
 
 
 // ==========================================
-// CAMBIO DE SESIÓN
+// CAMBIOS DE SESIÓN
 // ==========================================
 
 supabaseClient.auth.onAuthStateChange(
@@ -797,7 +910,7 @@ supabaseClient.auth.onAuthStateChange(
 
 
 // ==========================================
-// INICIAR
+// INICIAR ADMIN
 // ==========================================
 
 comprobarSesion();
