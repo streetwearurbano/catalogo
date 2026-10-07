@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Admin | Streetwear Urbano</title>
-<link rel="stylesheet" href="admin.css">
+
+    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
 
     <main>
+
+        <!-- =========================
+             LOGIN
+        ========================== -->
+
         <section id="login-admin">
+
             <h1>Panel de administración</h1>
 
             <form id="form-login">
+
                 <input
                     type="email"
                     id="email"
@@ -28,17 +38,36 @@
                     required
                 >
 
-                <button type="submit">Ingresar</button>
+                <button type="submit">
+                    Ingresar
+                </button>
+
             </form>
 
             <p id="mensaje-login"></p>
+
         </section>
 
 
-        <section id="panel-admin" style="display: none;">
+        <!-- =========================
+             PANEL ADMIN
+        ========================== -->
+
+        <section
+            id="panel-admin"
+            style="display: none;"
+        >
+
             <h1>Administrar productos</h1>
 
-            <button id="cerrar-sesion">Cerrar sesión</button>
+            <button id="cerrar-sesion">
+                Cerrar sesión
+            </button>
+
+
+            <!-- =========================
+                 AGREGAR PRODUCTO
+            ========================== -->
 
             <h2>Agregar producto</h2>
 
@@ -51,6 +80,7 @@
                     required
                 >
 
+
                 <input
                     type="number"
                     id="precio"
@@ -60,13 +90,46 @@
                     required
                 >
 
-                <select id="categoria" required>
-                    <option value="">Seleccionar categoría</option>
-                    <option value="remeras">Remeras</option>
-                    <option value="bermudas">Bermudas</option>
-                    <option value="pantalones">Pantalones</option>
-                    <option value="buzos">Buzos</option>
+
+                <select
+                    id="categoria"
+                    required
+                >
+
+                    <option value="">
+                        Seleccionar categoría
+                    </option>
+
+                    <option value="remeras">
+                        Remeras
+                    </option>
+
+                    <option value="bermudas">
+                        Bermudas
+                    </option>
+
+                    <option value="pantalones">
+                        Pantalones
+                    </option>
+
+                    <option value="buzos">
+                        Buzos
+                    </option>
+
                 </select>
+
+
+                <!-- TALLES -->
+
+                <input
+                    type="text"
+                    id="talles"
+                    placeholder="Talles disponibles. Ej: S, M, L, XL"
+                    required
+                >
+
+
+                <!-- IMAGEN -->
 
                 <input
                     type="file"
@@ -75,24 +138,53 @@
                     required
                 >
 
+
+                <!-- DESTACADO -->
+
                 <label>
-                    <input type="checkbox" id="destacado">
+
+                    <input
+                        type="checkbox"
+                        id="destacado"
+                    >
+
                     Producto destacado
+
                 </label>
 
-                <button type="submit">Agregar producto</button>
+
+                <button type="submit">
+                    Agregar producto
+                </button>
+
             </form>
 
+
             <p id="mensaje-producto"></p>
+
+
+            <!-- =========================
+                 PRODUCTOS
+            ========================== -->
 
             <h2>Productos</h2>
 
             <div id="lista-productos"></div>
+
         </section>
+
     </main>
 
+
+    <!-- SUPABASE -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <!-- ADMIN -->
+
     <script src="admin.js"></script>
 
 </body>
+
 </html>
