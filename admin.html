@@ -53,10 +53,7 @@
              PANEL ADMIN
         ========================== -->
 
-        <section
-            id="panel-admin"
-            style="display: none;"
-        >
+        <section id="panel-admin" style="display: none;">
 
             <h1>Administrar productos</h1>
 
@@ -66,12 +63,16 @@
 
 
             <!-- =========================
-                 AGREGAR PRODUCTO
+                 FORMULARIO
             ========================== -->
 
-            <h2>Agregar producto</h2>
+            <h2 id="titulo-formulario">
+                Agregar producto
+            </h2>
 
             <form id="form-producto">
+
+                <!-- NOMBRE -->
 
                 <input
                     type="text"
@@ -80,6 +81,8 @@
                     required
                 >
 
+
+                <!-- PRECIO -->
 
                 <input
                     type="number"
@@ -91,10 +94,9 @@
                 >
 
 
-                <select
-                    id="categoria"
-                    required
-                >
+                <!-- CATEGORÍA -->
+
+                <select id="categoria" required>
 
                     <option value="">
                         Seleccionar categoría
@@ -105,15 +107,27 @@
                     </option>
 
                     <option value="bermudas">
-                        Bermudas
+                        Bermudas / Shorts
                     </option>
 
                     <option value="pantalones">
-                        Pantalones
+                        Pantalones / Jeans
                     </option>
 
                     <option value="buzos">
-                        Buzos
+                        Buzos / Camperas
+                    </option>
+
+                    <option value="calzado">
+                        Calzado
+                    </option>
+
+                    <option value="accesorios">
+                        Accesorios
+                    </option>
+
+                    <option value="conjuntos">
+                        Conjuntos
                     </option>
 
                 </select>
@@ -131,17 +145,24 @@
 
                 <!-- IMAGEN -->
 
-                <input
-                    type="file"
-                    id="imagen"
-                    accept="image/*"
-                    required
-                >
+                <div class="campo-imagen">
+
+                    <input
+                        type="file"
+                        id="imagen"
+                        accept="image/*"
+                    >
+
+                    <span id="texto-imagen">
+                        Seleccioná una imagen
+                    </span>
+
+                </div>
 
 
                 <!-- DESTACADO -->
 
-                <label>
+                <label class="campo-destacado">
 
                     <input
                         type="checkbox"
@@ -153,8 +174,24 @@
                 </label>
 
 
-                <button type="submit">
+                <!-- GUARDAR -->
+
+                <button
+                    type="submit"
+                    id="boton-guardar"
+                >
                     Agregar producto
+                </button>
+
+
+                <!-- CANCELAR EDICIÓN -->
+
+                <button
+                    type="button"
+                    id="cancelar-edicion"
+                    style="display: none;"
+                >
+                    Cancelar edición
                 </button>
 
             </form>
