@@ -13,7 +13,7 @@
 <body>
 
     <!-- =========================
-         ENCABEZADO
+         HEADER
     ========================== -->
 
     <header class="header">
@@ -28,11 +28,13 @@
             <span></span>
         </button>
 
+
         <img
-            src="imagenes/logo.png"
+            src="logo.jpeg"
             alt="Streetwear Urbano"
             class="logo"
         >
+
 
         <button
             class="carrito"
@@ -40,6 +42,7 @@
             aria-label="Abrir carrito"
         >
             🛒
+
             <span
                 class="cantidad-carrito"
                 id="cantidadCarrito"
@@ -52,13 +55,14 @@
 
 
     <!-- =========================
-         MENÚ LATERAL
+         MENÚ
     ========================== -->
 
     <div
         class="fondo-menu"
         id="fondoMenu"
     ></div>
+
 
     <aside
         class="menu-lateral"
@@ -72,43 +76,69 @@
             ×
         </button>
 
+
         <img
-            src="imagenes/logo.png"
+            src="logo.jpeg"
             alt="Streetwear Urbano"
             class="logo-menu"
         >
 
+
         <nav class="categorias">
 
-            <a href="#" data-categoria="todos">
+            <a
+                href="#"
+                data-categoria="todos"
+            >
                 VER TODO
             </a>
 
-            <a href="#" data-categoria="conjuntos">
+            <a
+                href="#"
+                data-categoria="conjuntos"
+            >
                 CONJUNTOS
             </a>
 
-            <a href="#" data-categoria="remeras">
+            <a
+                href="#"
+                data-categoria="remeras"
+            >
                 REMERAS
             </a>
 
-            <a href="#" data-categoria="shorts">
-                SHORTS
+            <a
+                href="#"
+                data-categoria="bermudas"
+            >
+                BERMUDAS / SHORTS
             </a>
 
-            <a href="#" data-categoria="camperas">
-                CAMPERAS
+            <a
+                href="#"
+                data-categoria="buzos"
+            >
+                BUZOS / CAMPERAS
             </a>
 
-            <a href="#" data-categoria="jeans">
-                JEANS
+            <a
+                href="#"
+                data-categoria="pantalones"
+            >
+                PANTALONES / JEANS
             </a>
 
-            <a href="#" data-categoria="accesorios">
+            <a
+                href="#"
+                data-categoria="accesorios"
+            >
                 ACCESORIOS
             </a>
 
-            <a href="#" data-categoria="calzado">
+            <a
+                href="#"
+                data-categoria="calzado"
+            >
                 CALZADO
             </a>
 
@@ -124,7 +154,7 @@
     <section class="banner">
 
         <img
-            src="imagenes/banner.jpg"
+            src="logo.jpeg"
             alt="Streetwear Urbano"
         >
 
@@ -141,15 +171,11 @@
             DESTACADOS
         </h1>
 
+
         <section
             class="productos"
             id="productos"
         >
-
-            <!--
-                Los productos se cargan
-                automáticamente desde Supabase
-            -->
 
             <p id="cargandoProductos">
                 Cargando productos...
@@ -161,7 +187,7 @@
 
 
     <!-- =========================
-         FONDO DEL CARRITO
+         CARRITO
     ========================== -->
 
     <div
@@ -169,10 +195,6 @@
         id="fondoCarrito"
     ></div>
 
-
-    <!-- =========================
-         CARRITO LATERAL
-    ========================== -->
 
     <aside
         class="panel-carrito"
@@ -184,6 +206,7 @@
             <h2>
                 Tu carrito
             </h2>
+
 
             <button
                 id="cerrarCarrito"
@@ -236,7 +259,7 @@
 
 
     <!-- =========================
-         AVISO
+         NOTIFICACIÓN
     ========================== -->
 
     <div
@@ -246,13 +269,13 @@
 
 
     <!-- =========================
-         PIE DE PÁGINA
+         FOOTER
     ========================== -->
 
     <footer>
 
         <img
-            src="imagenes/logo.png"
+            src="logo.jpeg"
             alt="Streetwear Urbano"
             class="logo-footer"
         >
@@ -276,11 +299,12 @@
     </footer>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
+    <!-- SUPABASE -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <!-- JS -->
 
     <script src="script.js"></script>
 
