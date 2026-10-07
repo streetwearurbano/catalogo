@@ -1,248 +1,214 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Streetwear Urbano</title>
+    <title>Admin | Streetwear Urbano</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
 
-    <!-- =========================
-         ENCABEZADO
-    ========================== -->
-    <header class="header">
-
-        <button class="boton-menu" id="abrirMenu" aria-label="Abrir menú">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <img
-            src="imagenes/logo.png"
-            alt="Streetwear Urbano"
-            class="logo"
-        >
-
-        <button class="carrito" aria-label="Carrito">
-            🛒
-            <span class="cantidad-carrito">0</span>
-        </button>
-
-    </header>
-
-
-    <!-- =========================
-         MENÚ LATERAL
-    ========================== -->
-    <div class="fondo-menu" id="fondoMenu"></div>
-
-    <aside class="menu-lateral" id="menuLateral">
-
-        <button class="cerrar-menu" id="cerrarMenu">×</button>
-
-        <img
-            src="imagenes/logo.png"
-            alt="Streetwear Urbano"
-            class="logo-menu"
-        >
-
-        <nav class="categorias">
-
-            <a href="#" data-categoria="todos">VER TODO</a>
-
-            <a href="#" data-categoria="conjuntos">CONJUNTOS</a>
-
-            <a href="#" data-categoria="remeras">REMERAS</a>
-
-            <a href="#" data-categoria="shorts">SHORTS</a>
-
-            <a href="#" data-categoria="camperas">CAMPERAS</a>
-
-            <a href="#" data-categoria="jeans">JEANS</a>
-
-            <a href="#" data-categoria="accesorios">ACCESORIOS</a>
-
-            <a href="#" data-categoria="calzado">CALZADO</a>
-
-        </nav>
-
-    </aside>
-
-
-    <!-- =========================
-         BANNER PRINCIPAL
-    ========================== -->
-    <section class="banner">
-
-        <img
-            src="imagenes/banner.jpg"
-            alt="Streetwear Urbano"
-        >
-
-    </section>
-
-
-    <!-- =========================
-         PRODUCTOS DESTACADOS
-    ========================== -->
     <main>
 
-        <h1 class="titulo-productos">
-            DESTACADOS
-        </h1>
+        <!-- =========================
+             LOGIN
+        ========================== -->
 
-        <section class="productos" id="productos">
+        <section id="login-admin">
+
+            <h1>Panel de administración</h1>
+
+            <form id="form-login">
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Correo electrónico"
+                    autocomplete="email"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Contraseña"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit">
+                    Ingresar
+                </button>
+
+            </form>
+
+            <p id="mensaje-login"></p>
+
+        </section>
 
 
-            <!-- PRODUCTO 1 -->
-            <article class="producto" data-categoria="remeras">
+        <!-- =========================
+             PANEL
+        ========================== -->
 
-                <div class="contenedor-imagen">
-                    <img
-                        src="imagenes/remera1.jpg"
-                        alt="Remera Streetwear"
+        <section id="panel-admin" style="display: none;">
+
+            <h1>Administrar productos</h1>
+
+            <button id="cerrar-sesion" type="button">
+                Cerrar sesión
+            </button>
+
+
+            <!-- =========================
+                 FORMULARIO PRODUCTO
+            ========================== -->
+
+            <h2 id="titulo-formulario">
+                Agregar producto
+            </h2>
+
+            <form id="form-producto">
+
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Nombre del producto"
+                    required
+                >
+
+
+                <input
+                    type="number"
+                    id="precio"
+                    placeholder="Precio"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+
+                <select id="categoria" required>
+
+                    <option value="">
+                        Seleccionar categoría
+                    </option>
+
+                    <option value="conjuntos">
+                        Conjuntos
+                    </option>
+
+                    <option value="remeras">
+                        Remeras
+                    </option>
+
+                    <option value="shorts">
+                        Shorts
+                    </option>
+
+                    <option value="camperas">
+                        Camperas
+                    </option>
+
+                    <option value="jeans">
+                        Jeans
+                    </option>
+
+                    <option value="accesorios">
+                        Accesorios
+                    </option>
+
+                    <option value="calzado">
+                        Calzado
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="text"
+                    id="talles"
+                    placeholder="Talles: S, M, L, XL"
+                    required
+                >
+
+
+                <div class="campo-imagen">
+
+                    <label for="imagen">
+                        Imagen del producto
+                    </label>
+
+                    <input
+                        type="file"
+                        id="imagen"
+                        accept="image/*"
                     >
+
+                    <small id="texto-imagen">
+                        Seleccioná una imagen
+                    </small>
+
                 </div>
 
-                <h2>Remera Streetwear</h2>
 
-                <p class="precio">
-                    $25.000,00 ARS
-                </p>
+                <label class="campo-destacado">
 
-            </article>
-
-
-            <!-- PRODUCTO 2 -->
-            <article class="producto" data-categoria="remeras">
-
-                <div class="contenedor-imagen">
-                    <img
-                        src="imagenes/remera2.jpg"
-                        alt="Remera Oversize"
+                    <input
+                        type="checkbox"
+                        id="destacado"
                     >
-                </div>
 
-                <h2>Remera Oversize</h2>
+                    Producto destacado
 
-                <p class="precio">
-                    $28.000,00 ARS
-                </p>
-
-            </article>
+                </label>
 
 
-            <!-- PRODUCTO 3 -->
-            <article class="producto" data-categoria="shorts">
-
-                <div class="contenedor-imagen">
-                    <img
-                        src="imagenes/bermuda1.jpg"
-                        alt="Bermuda Streetwear"
-                    >
-                </div>
-
-                <h2>Bermuda Streetwear</h2>
-
-                <p class="precio">
-                    $32.000,00 ARS
-                </p>
-
-            </article>
+                <button
+                    type="submit"
+                    id="boton-guardar"
+                >
+                    Agregar producto
+                </button>
 
 
-            <!-- PRODUCTO 4 -->
-            <article class="producto" data-categoria="camperas">
+                <button
+                    type="button"
+                    id="cancelar-edicion"
+                    style="display: none;"
+                >
+                    Cancelar edición
+                </button>
 
-                <div class="contenedor-imagen">
-                    <img
-                        src="imagenes/campera1.jpg"
-                        alt="Campera Oversize"
-                    >
-                </div>
-
-                <h2>Campera Oversize</h2>
-
-                <p class="precio">
-                    $55.000,00 ARS
-                </p>
-
-            </article>
+            </form>
 
 
-            <!-- PRODUCTO 5 -->
-            <article class="producto" data-categoria="jeans">
-
-                <div class="contenedor-imagen">
-                    <img
-                        src="imagenes/jean1.jpg"
-                        alt="Jean Baggy"
-                    >
-                </div>
-
-                <h2>Jean Baggy</h2>
-
-                <p class="precio">
-                    $40.000,00 ARS
-                </p>
-
-            </article>
+            <p id="mensaje-producto"></p>
 
 
-            <!-- PRODUCTO 6 -->
-            <article class="producto" data-categoria="calzado">
+            <!-- =========================
+                 PRODUCTOS
+            ========================== -->
 
-                <div class="contenedor-imagen">
-                    <img
-                        src="imagenes/zapatilla1.jpg"
-                        alt="Zapatillas Urban"
-                    >
-                </div>
+            <h2>Productos</h2>
 
-                <h2>Zapatillas Urban</h2>
-
-                <p class="precio">
-                    $65.000,00 ARS
-                </p>
-
-            </article>
+            <div id="lista-productos"></div>
 
         </section>
 
     </main>
 
 
-    <!-- =========================
-         PIE DE PÁGINA
-    ========================== -->
-    <footer>
+    <!-- SUPABASE -->
 
-        <img
-            src="imagenes/logo.png"
-            alt="Streetwear Urbano"
-            class="logo-footer"
-        >
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <p>Indumentaria masculina</p>
-
-        <p>Envíos a todo el país</p>
-
-        <p>José María Amor 478 - B. San Francisco</p>
-
-        <p class="instagram">
-            @streetwear_urbano
-        </p>
-
-    </footer>
-
-
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+    <script src="admin.js"></script>
 
 </body>
+
 </html>
