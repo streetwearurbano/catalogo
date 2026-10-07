@@ -1,9 +1,216 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: #080808;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+    width: 100%;
+    min-height: 100vh;
+}
+
+
 /* =========================
-   TALLES E IMAGEN
+   LOGIN
+========================= */
+
+#login-admin {
+    width: 90%;
+    max-width: 430px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: #111111;
+
+    border: 1px solid #292929;
+    border-radius: 18px;
+
+    padding: 40px;
+}
+
+#login-admin h1 {
+    font-size: 28px;
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+#form-login {
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+#form-login input {
+    width: 100%;
+
+    padding: 15px;
+
+    background: #181818;
+
+    border: 1px solid #333333;
+    border-radius: 10px;
+
+    color: white;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+#form-login input:focus {
+    border-color: #ffffff;
+}
+
+#form-login button {
+    padding: 15px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: white;
+    color: black;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+#form-login button:hover {
+    opacity: 0.8;
+}
+
+#mensaje-login {
+    margin-top: 15px;
+
+    text-align: center;
+}
+
+
+/* =========================
+   PANEL ADMIN
+========================= */
+
+#panel-admin {
+    width: 92%;
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 50px 0;
+}
+
+#panel-admin > h1 {
+    font-size: 34px;
+
+    margin-bottom: 20px;
+}
+
+#cerrar-sesion {
+    background: transparent;
+    color: #ffffff;
+
+    border: 1px solid #444444;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    margin-bottom: 45px;
+
+    transition: 0.2s;
+}
+
+#cerrar-sesion:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+
+/* =========================
+   FORMULARIO PRODUCTO
+========================= */
+
+#panel-admin h2 {
+    margin-bottom: 18px;
+
+    font-size: 22px;
+}
+
+#form-producto {
+    background: #111111;
+
+    border: 1px solid #292929;
+    border-radius: 16px;
+
+    padding: 25px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+/* INPUTS */
+
+#form-producto input[type="text"],
+#form-producto input[type="number"],
+#form-producto select,
+#form-producto input[type="file"] {
+    width: 100%;
+
+    padding: 14px;
+
+    background: #181818;
+    color: #ffffff;
+
+    border: 1px solid #333333;
+    border-radius: 9px;
+
+    outline: none;
+}
+
+#form-producto input:focus,
+#form-producto select:focus {
+    border-color: #ffffff;
+}
+
+#form-producto select option {
+    background: #181818;
+    color: white;
+}
+
+
+/* =========================
+   TALLES
 ========================= */
 
 #talles {
     width: 100%;
+
     padding: 14px;
 
     background: #181818;
@@ -21,7 +228,7 @@
 
 
 /* =========================
-   CAMPO IMAGEN
+   IMAGEN
 ========================= */
 
 .campo-imagen {
@@ -48,19 +255,52 @@
    DESTACADO
 ========================= */
 
-.campo-destacado {
-    min-height: 48px;
-
+#form-producto label {
     display: flex;
     align-items: center;
 
     gap: 10px;
+
+    font-size: 14px;
+}
+
+.campo-destacado {
+    min-height: 48px;
+}
+
+#destacado {
+    width: 18px;
+    height: 18px;
 }
 
 
 /* =========================
-   CANCELAR EDICIÓN
+   BOTONES FORMULARIO
 ========================= */
+
+#form-producto button {
+    border: none;
+    border-radius: 9px;
+
+    padding: 14px;
+
+    background: #ffffff;
+    color: #000000;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+#form-producto button:hover {
+    opacity: 0.8;
+}
+
+
+/* CANCELAR EDICIÓN */
 
 #cancelar-edicion {
     background: #181818 !important;
@@ -76,12 +316,91 @@
 }
 
 
+/* MENSAJE */
+
+#mensaje-producto {
+    min-height: 25px;
+
+    margin-bottom: 35px;
+}
+
+
+/* =========================
+   LISTA DE PRODUCTOS
+========================= */
+
+#lista-productos {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.producto-admin {
+    background: #111111;
+
+    border: 1px solid #292929;
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.producto-admin img {
+    width: 100%;
+    height: 280px;
+
+    object-fit: cover;
+}
+
+.producto-admin-info {
+    padding: 18px;
+}
+
+.producto-admin-info h3 {
+    margin-bottom: 8px;
+}
+
+.producto-admin-info p {
+    color: #aaaaaa;
+
+    margin-bottom: 12px;
+}
+
+
 /* =========================
    BOTONES EDITAR / ELIMINAR
 ========================= */
 
 .producto-admin-botones {
+    display: flex;
+
+    gap: 10px;
+
     margin-top: 15px;
+}
+
+.producto-admin-botones button {
+    flex: 1;
+
+    padding: 10px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    border: 1px solid #444444;
+
+    background: #181818;
+    color: white;
+
+    transition: 0.2s;
+}
+
+.producto-admin-botones button:hover {
+    background: white;
+    color: black;
 }
 
 .producto-admin-botones button:first-child {
@@ -93,4 +412,35 @@
     color: #ffffff;
 
     border-color: #b00000;
+}
+
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 750px) {
+
+    #login-admin {
+        padding: 28px 20px;
+    }
+
+    #panel-admin {
+        padding: 30px 0;
+    }
+
+    #panel-admin > h1 {
+        font-size: 27px;
+    }
+
+    #form-producto {
+        grid-template-columns: 1fr;
+
+        padding: 18px;
+    }
+
+    #lista-productos {
+        grid-template-columns: 1fr;
+    }
+
 }
