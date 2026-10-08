@@ -174,11 +174,15 @@ function crearTarjetaProducto(producto) {
     imagen.alt = producto.nombre || "Producto";
     imagen.loading = "lazy";
     contenedorImagen.appendChild(imagen);
+    contenedorImagen.addEventListener("click", (evento) => {
+    if (evento.target.closest("button")) return;
+
+    window.location.href =
+        "producto.html?id=" + encodeURIComponent(producto.id);
+});
 
     let indiceImagen = 0;
-    contenedorImagen.addEventListener("click", () => {
-    abrirModalProductoDetalle(producto, indiceImagen);
-});
+   
 
     if (producto.destacado) {
         const etiqueta = document.createElement("span");
