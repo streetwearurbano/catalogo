@@ -1,3 +1,4 @@
+
 // ==========================================
 // SUPABASE
 // ==========================================
@@ -33,12 +34,34 @@ const notificacion = document.getElementById("notificacion");
 
 
 // ==========================================
+// ELEMENTOS DEL DETALLE DEL PRODUCTO
+// ==========================================
+
+const modalProducto = document.getElementById("modalProducto");
+const cerrarModalProducto = document.getElementById("cerrarModalProducto");
+const modalImagen = document.getElementById("modalImagen");
+const modalNombre = document.getElementById("modalNombre");
+const modalPrecio = document.getElementById("modalPrecio");
+const modalTalles = document.getElementById("modalTalles");
+const modalTituloTalles = document.getElementById("modalTituloTalles");
+const modalAgregarCarrito = document.getElementById("modalAgregarCarrito");
+const modalAnterior = document.getElementById("modalAnterior");
+const modalSiguiente = document.getElementById("modalSiguiente");
+const modalContador = document.getElementById("modalContador");
+
+
+// ==========================================
 // ESTADO
 // ==========================================
 
 let productos = [];
 let categoriaActual = "todos";
 let carrito = cargarCarritoGuardado();
+
+let productoAbierto = null;
+let imagenesDetalle = [];
+let indiceDetalle = 0;
+let talleDetalle = "";
 
 
 // ==========================================
@@ -85,6 +108,7 @@ function mostrarNotificacion(texto) {
     notificacion.classList.add("activa");
 
     clearTimeout(mostrarNotificacion.timeout);
+
     mostrarNotificacion.timeout = setTimeout(() => {
         notificacion.classList.remove("activa");
     }, 2200);
@@ -96,7 +120,8 @@ function mostrarNotificacion(texto) {
 // ==========================================
 
 async function cargarProductos() {
-    productosContenedor.innerHTML = '<p id="cargandoProductos">Cargando productos...</p>';
+    productosContenedor.innerHTML =
+        '<p id="cargandoProductos">Cargando productos...</p>';
 
     const { data, error } = await supabaseClient
         .from("productos")
@@ -105,7 +130,8 @@ async function cargarProductos() {
 
     if (error) {
         console.error(error);
-        productosContenedor.innerHTML = "<p>No se pudieron cargar los productos.</p>";
+        productosContenedor.innerHTML =
+            "<p>No se pudieron cargar los productos.</p>";
         return;
     }
 
@@ -114,13 +140,15 @@ async function cargarProductos() {
 }
 
 function renderProductos() {
- let lista = productos;
+    let lista = productos;
 
-if (categoriaActual === "todos") {
-    lista = productos.filter(producto => producto.destacado === true);
-} else {
-    lista = productos.filter(producto => producto.categoria === categoriaActual);
-}
+    if (categoriaActual === "todos") {
+        lista = productos.filter(producto => producto.destacado === true);
+    } else {
+        lista = productos.filter(
+            producto => producto.categoria === categoriaActual
+        );
+    }
 
     productosContenedor.innerHTML = "";
 
@@ -130,11 +158,15 @@ if (categoriaActual === "todos") {
         const enlace = Array.from(enlacesCategorias).find(
             item => item.dataset.categoria === categoriaActual
         );
-        tituloProductos.textContent = enlace ? enlace.textContent.trim() : categoriaActual.toUpperCase();
+
+        tituloProductos.textContent = enlace
+            ? enlace.textContent.trim()
+            : categoriaActual.toUpperCase();
     }
 
     if (lista.length === 0) {
-        productosContenedor.innerHTML = "<p>No hay productos en esta categoría.</p>";
+        productosContenedor.innerHTML =
+            "<p>No hay productos en esta categoría.</p>";
         return;
     }
 
@@ -158,7 +190,13 @@ function crearTarjetaProducto(producto) {
     imagen.src = imagenes[0];
     imagen.alt = producto.nombre || "Producto";
     imagen.loading = "lazy";
+
     contenedorImagen.appendChild(imagen);
+
+    // NUEVO: abrir el detalle al tocar la imagen
+    imagen.addEventListener("click", () => {
+        abrirDetalleProducto(producto);
+    });
 
     let indiceImagen = 0;
 
@@ -191,7 +229,8 @@ function crearTarjetaProducto(producto) {
 
         const actualizarGaleria = () => {
             imagen.src = imagenes[indiceImagen];
-            contador.textContent = `${indiceImagen + 1} / ${imagenes.length}`;
+            contador.textContent =
+                `${indiceImagen + 1} / ${imagenes.length}`;
 
             puntos.querySelectorAll("button").forEach((punto, i) => {
                 punto.classList.toggle("activo", i === indiceImagen);
@@ -203,7 +242,10 @@ function crearTarjetaProducto(producto) {
             punto.type = "button";
             punto.className = "punto-galeria";
             punto.setAttribute("aria-label", `Ver foto ${i + 1}`);
-            if (i === 0) punto.classList.add("activo");
+
+            if (i === 0) {
+                punto.classList.add("activo");
+            }
 
             punto.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -216,13 +258,19 @@ function crearTarjetaProducto(producto) {
 
         anterior.addEventListener("click", (e) => {
             e.stopPropagation();
-            indiceImagen = (indiceImagen - 1 + imagenes.length) % imagenes.length;
+
+            indiceImagen =
+                (indiceImagen - 1 + imagenes.length) % imagenes.length;
+
             actualizarGaleria();
         });
 
         siguiente.addEventListener("click", (e) => {
             e.stopPropagation();
-            indiceImagen = (indiceImagen + 1) % imagenes.length;
+
+            indiceImagen =
+                (indiceImagen + 1) % imagenes.length;
+
             actualizarGaleria();
         });
 
@@ -244,7 +292,10 @@ function crearTarjetaProducto(producto) {
 
     const tituloTalles = document.createElement("p");
     tituloTalles.className = "titulo-talles";
-    tituloTalles.textContent = talles.length ? "Seleccioná un talle" : "Talles: consultar";
+    tituloTalles.textContent = talles.length
+        ? "Seleccioná un talle"
+        : "Talles: consultar";
+
     zonaTalles.appendChild(tituloTalles);
 
     const botonesTalles = document.createElement("div");
@@ -303,6 +354,144 @@ function crearTarjetaProducto(producto) {
 
 
 // ==========================================
+// DETALLE DEL PRODUCTO - NUEVO
+// ==========================================
+
+function actualizarImagenDetalle() {
+    if (imagenesDetalle.length === 0) {
+        return;
+    }
+
+    modalImagen.src = imagenesDetalle[indiceDetalle];
+
+    modalContador.textContent =
+        `${indiceDetalle + 1} / ${imagenesDetalle.length}`;
+
+    const variasFotos = imagenesDetalle.length > 1;
+
+    modalAnterior.style.display = variasFotos ? "block" : "none";
+    modalSiguiente.style.display = variasFotos ? "block" : "none";
+    modalContador.style.display = variasFotos ? "block" : "none";
+}
+
+function abrirDetalleProducto(producto) {
+    productoAbierto = producto;
+    imagenesDetalle = obtenerImagenes(producto);
+    indiceDetalle = 0;
+    talleDetalle = "";
+
+    modalNombre.textContent = producto.nombre || "Producto";
+    modalPrecio.textContent = `$${formatearPrecio(producto.precio)}`;
+    modalImagen.alt = producto.nombre || "Producto";
+
+    actualizarImagenDetalle();
+
+    const talles = obtenerTalles(producto);
+
+    modalTituloTalles.textContent = talles.length
+        ? "Seleccioná un talle"
+        : "Talles: consultar";
+
+    modalTalles.innerHTML = "";
+
+    talles.forEach(talle => {
+        const boton = document.createElement("button");
+        boton.type = "button";
+        boton.className = "boton-talle";
+        boton.textContent = talle;
+
+        boton.addEventListener("click", () => {
+            talleDetalle = talle;
+
+            modalTalles.querySelectorAll(".boton-talle").forEach(item => {
+                item.classList.remove("seleccionado");
+            });
+
+            boton.classList.add("seleccionado");
+        });
+
+        modalTalles.appendChild(boton);
+    });
+
+    modalProducto.classList.add("activo");
+    modalProducto.setAttribute("aria-hidden", "false");
+
+    document.body.style.overflow = "hidden";
+    cerrarModalProducto.focus();
+}
+
+function cerrarDetalleProducto() {
+    modalProducto.classList.remove("activo");
+    modalProducto.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+    productoAbierto = null;
+}
+
+modalAnterior.addEventListener("click", () => {
+    if (imagenesDetalle.length <= 1) {
+        return;
+    }
+
+    indiceDetalle =
+        (indiceDetalle - 1 + imagenesDetalle.length) % imagenesDetalle.length;
+
+    actualizarImagenDetalle();
+});
+
+modalSiguiente.addEventListener("click", () => {
+    if (imagenesDetalle.length <= 1) {
+        return;
+    }
+
+    indiceDetalle =
+        (indiceDetalle + 1) % imagenesDetalle.length;
+
+    actualizarImagenDetalle();
+});
+
+cerrarModalProducto.addEventListener("click", cerrarDetalleProducto);
+
+modalProducto.addEventListener("click", (evento) => {
+    if (evento.target === modalProducto) {
+        cerrarDetalleProducto();
+    }
+});
+
+document.addEventListener("keydown", (evento) => {
+    if (
+        evento.key === "Escape" &&
+        modalProducto.classList.contains("activo")
+    ) {
+        cerrarDetalleProducto();
+    }
+});
+
+modalAgregarCarrito.addEventListener("click", () => {
+    if (!productoAbierto) {
+        return;
+    }
+
+    const talles = obtenerTalles(productoAbierto);
+
+    if (talles.length > 0 && !talleDetalle) {
+        mostrarNotificacion("Seleccioná un talle");
+        return;
+    }
+
+    agregarAlCarrito({
+        id: productoAbierto.id,
+        nombre: productoAbierto.nombre,
+        precio: Number(productoAbierto.precio),
+        imagen: imagenesDetalle[0],
+        talle: talleDetalle || "Consultar"
+    });
+
+    cerrarDetalleProducto();
+});
+
+
+// ==========================================
 // MENÚ
 // ==========================================
 
@@ -323,10 +512,15 @@ fondoMenu.addEventListener("click", cerrarMenuLateral);
 enlacesCategorias.forEach(enlace => {
     enlace.addEventListener("click", (e) => {
         e.preventDefault();
+
         categoriaActual = enlace.dataset.categoria || "todos";
+
         cerrarMenuLateral();
         renderProductos();
-        document.querySelector("main").scrollIntoView({ behavior: "smooth" });
+
+        document.querySelector("main").scrollIntoView({
+            behavior: "smooth"
+        });
     });
 });
 
@@ -355,7 +549,10 @@ function agregarAlCarrito(producto) {
     if (existente) {
         existente.cantidad += 1;
     } else {
-        carrito.push({ ...producto, cantidad: 1 });
+        carrito.push({
+            ...producto,
+            cantidad: 1
+        });
     }
 
     guardarCarrito();
@@ -376,12 +573,17 @@ function cambiarCantidad(indice, cambio) {
 
 function eliminarDelCarrito(indice) {
     carrito.splice(indice, 1);
+
     guardarCarrito();
     renderCarrito();
 }
 
 function renderCarrito() {
-    const cantidadTotal = carrito.reduce((total, item) => total + item.cantidad, 0);
+    const cantidadTotal = carrito.reduce(
+        (total, item) => total + item.cantidad,
+        0
+    );
+
     const precioTotal = carrito.reduce(
         (total, item) => total + Number(item.precio) * item.cantidad,
         0
@@ -389,10 +591,12 @@ function renderCarrito() {
 
     cantidadCarrito.textContent = cantidadTotal;
     totalCarrito.textContent = `$${formatearPrecio(precioTotal)}`;
+
     productosCarrito.innerHTML = "";
 
     if (carrito.length === 0) {
-        productosCarrito.innerHTML = '<p class="carrito-vacio">Tu carrito está vacío.</p>';
+        productosCarrito.innerHTML =
+            '<p class="carrito-vacio">Tu carrito está vacío.</p>';
         return;
     }
 
@@ -402,7 +606,9 @@ function renderCarrito() {
 
         elemento.innerHTML = `
             <div class="producto-carrito-contenido">
-                <img class="imagen-carrito" src="${escaparHTML(item.imagen || "logo.jpeg")}" alt="${escaparHTML(item.nombre)}">
+                <img class="imagen-carrito"
+                     src="${escaparHTML(item.imagen || "logo.jpeg")}"
+                     alt="${escaparHTML(item.nombre)}">
 
                 <div class="producto-carrito-info">
                     <strong>${escaparHTML(item.nombre)}</strong>
@@ -463,6 +669,7 @@ finalizarCompra.addEventListener("click", () => {
 
     const lineas = carrito.map(item => {
         const subtotal = Number(item.precio) * item.cantidad;
+
         return `▪️ ${item.nombre} - Talle: ${item.talle} - Cantidad: ${item.cantidad} - $${formatearPrecio(subtotal)}`;
     });
 
@@ -476,14 +683,14 @@ finalizarCompra.addEventListener("click", () => {
         "¿Me confirman stock?"
     ].join("\n");
 
-  const numero = "5493704991434";
-    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`, "_blank");
+    const numero = "5493704991434";
+
+    window.open(
+        `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`,
+        "_blank"
+    );
 });
 
 
 // ==========================================
-// INICIAR
-// ==========================================
-
-renderCarrito();
-cargarProductos();
+// INI
