@@ -114,11 +114,13 @@ async function cargarProductos() {
 }
 
 function renderProductos() {
-    let lista = productos;
+ let lista = productos;
 
-    if (categoriaActual !== "todos") {
-        lista = productos.filter(producto => producto.categoria === categoriaActual);
-    }
+if (categoriaActual === "todos") {
+    lista = productos.filter(producto => producto.destacado === true);
+} else {
+    lista = productos.filter(producto => producto.categoria === categoriaActual);
+}
 
     productosContenedor.innerHTML = "";
 
