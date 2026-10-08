@@ -869,4 +869,219 @@ footer {
         margin-bottom: 20px;
     }
                                                 }
+/* MODAL DE PRODUCTO */
+
+.fondo-modal-producto {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    z-index: 290;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s;
+}
+
+.fondo-modal-producto.activo {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-producto {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.96);
+    width: min(1100px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    background: #0b0b0b;
+    border: 1px solid #2a2a2a;
+    border-radius: 14px;
+    z-index: 300;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s;
+}
+
+.modal-producto.activo {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.cerrar-modal-producto {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 36px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.modal-producto-contenido {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 30px;
+    padding: 30px;
+}
+
+.modal-galeria-principal {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.05;
+    background: #080808;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.modal-galeria-principal img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.modal-flecha {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 50px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.62);
+    color: #ffffff;
+    font-size: 34px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.modal-flecha-anterior {
+    left: 10px;
+}
+
+.modal-flecha-siguiente {
+    right: 10px;
+}
+
+.miniaturas-modal {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.miniatura-modal {
+    width: 74px;
+    height: 74px;
+    padding: 0;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    background: #111111;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.miniatura-modal img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.miniatura-modal.activa {
+    border-color: #ff1717;
+}
+
+.modal-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-info h2 {
+    font-size: 31px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+
+.modal-precio {
+    font-size: 29px;
+    color: #ff1717;
+    margin-bottom: 22px;
+}
+
+.modal-zona-talles {
+    margin-bottom: 20px;
+}
+
+.modal-titulo-talles {
+    color: #bbbbbb;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.modal-botones-talles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.modal-boton-talle {
+    min-width: 46px;
+    padding: 10px 13px;
+    background: #111111;
+    color: #ffffff;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal-boton-talle:hover {
+    border-color: #ff1717;
+}
+
+.modal-boton-talle.seleccionado {
+    background: #ff1717;
+    border-color: #ff1717;
+    color: #ffffff;
+}
+
+.modal-sin-talles {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+.contenedor-imagen {
+    cursor: pointer;
+}
+
+@media (max-width: 850px) {
+    .modal-producto {
+        width: 95vw;
+        max-height: 90vh;
+    }
+
+    .modal-producto-contenido {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .modal-info h2 {
+        font-size: 25px;
+    }
+
+    .modal-precio {
+        font-size: 24px;
+    }
+}
    
