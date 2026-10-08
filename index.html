@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streetwear Urbano</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <button class="boton-menu" id="abrirMenu" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <img src="logo.jpeg" alt="Streetwear Urbano" class="logo">
+
+        <button class="carrito" id="abrirCarrito" aria-label="Abrir carrito">
+            🛒
+            <span class="cantidad-carrito" id="cantidadCarrito">0</span>
+        </button>
+    </header>
+
+    <div class="fondo-menu" id="fondoMenu"></div>
+
+    <aside class="menu-lateral" id="menuLateral">
+        <button class="cerrar-menu" id="cerrarMenu" aria-label="Cerrar menú">×</button>
+
+        <img src="logo.jpeg" alt="Streetwear Urbano" class="logo-menu">
+
+        <nav class="categorias">
+            <a href="#" data-categoria="todos">VER TODO</a>
+            <a href="#" data-categoria="conjuntos">CONJUNTOS</a>
+            <a href="#" data-categoria="remeras">REMERAS</a>
+            <a href="#" data-categoria="bermudas">SHORTS</a>
+            <a href="#" data-categoria="buzos">CAMPERAS</a>
+            <a href="#" data-categoria="pantalones">JEANS</a>
+            <a href="#" data-categoria="accesorios">ACCESORIOS</a>
+            <a href="#" data-categoria="calzado">CALZADO</a>
+        </nav>
+    </aside>
+
+    <section class="banner">
+        <img src="logo.jpeg" alt="Streetwear Urbano">
+    </section>
+
+    <main>
+        <h1 class="titulo-productos">DESTACADOS</h1>
+
+        <section class="productos" id="productos">
+            <p id="cargandoProductos">Cargando productos...</p>
+        </section>
+    </main>
+
+    <div class="fondo-carrito" id="fondoCarrito"></div>
+
+    <aside class="panel-carrito" id="panelCarrito">
+        <div class="cabecera-carrito">
+            <h2>Tu carrito</h2>
+            <button id="cerrarCarrito" class="cerrar-carrito" aria-label="Cerrar carrito">×</button>
+        </div>
+
+        <div class="productos-carrito" id="productosCarrito">
+            <p class="carrito-vacio">Tu carrito está vacío.</p>
+        </div>
+
+        <div class="resumen-carrito">
+            <div class="fila-total">
+                <span>TOTAL</span>
+                <strong id="totalCarrito">$0</strong>
+            </div>
+
+            <button id="finalizarCompra" class="finalizar-compra">
+                FINALIZAR COMPRA POR WHATSAPP
+            </button>
+        </div>
+    </aside>
+
+    <div id="notificacion" class="notificacion"></div>
+
+    <footer>
+        <img src="logo.jpeg" alt="Streetwear Urbano" class="logo-footer">
+        <p>Indumentaria masculina</p>
+        <p>Envíos a todo el país</p>
+        <p>José María Amor 478 - B. San Francisco</p>
+        <p class="instagram">@streetwear_urbano</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
