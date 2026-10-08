@@ -51,6 +51,9 @@ const modalSiguiente = document.getElementById("modalSiguiente");
 let productos = [];
 let categoriaActual = "todos";
 let carrito = cargarCarritoGuardado();
+let productoModalActual = null;
+let indiceImagenModal = 0;
+let talleModalSeleccionado = "";
 
 
 // ==========================================
@@ -173,6 +176,9 @@ function crearTarjetaProducto(producto) {
     contenedorImagen.appendChild(imagen);
 
     let indiceImagen = 0;
+    contenedorImagen.addEventListener("click", () => {
+    abrirModalProductoDetalle(producto, indiceImagen);
+});
 
     if (producto.destacado) {
         const etiqueta = document.createElement("span");
@@ -312,7 +318,135 @@ function crearTarjetaProducto(producto) {
 
     return tarjeta;
 }
+function actualizarImagenModal() {
+    if (!productoModalActual) return;
 
+    const imagenes = obtenerImagenes(productoModalActual);
+
+    modalImagenPrincipal.src = imagenes[indiceImagenModal];
+    modalImagenPrincipal.alt = productoModalActual.nombre || "Producto";
+
+    modalAnterior.style.display = imagenes.length > 1 ? "flex" : "none";
+    modalSiguiente.style.display = imagenes.length > 1 ? "flex" : "none";
+
+    miniaturasModal.querySelectorAll(".miniatura-modal").forEach((miniatura, i) => {
+        miniatura.classList.toggle("activa", i === indiceImagenModal);
+    });
+}
+
+function abrirModalProductoDetalle(producto, indiceInicial = 0) {
+    productoModalActual = producto;
+    indiceImagenModal = indiceInicial;
+    talleModalSeleccionado = "";
+
+    const imagenes = obtenerImagenes(producto);
+    const talles = obtenerTalles(producto);
+
+    modalNombreProducto.textContent = producto.nombre || "Producto";
+    modalPrecioProducto.textContent = `$${formatearPrecio(producto.precio)}`;
+
+    modalTituloTalles.textContent = talles.length
+        ? "Seleccioná un talle"
+        : "Talles: consultar";
+
+    modalBotonesTalles.innerHTML = "";
+
+    if (talles.length > 0) {
+        talles.forEach(talle => {
+            const boton = document.createElement("button");
+            boton.type = "button";
+            boton.className = "modal-boton-talle";
+            boton.textContent = talle;
+
+            boton.addEventListener("click", () => {
+                talleModalSeleccionado = talle;
+
+                modalBotonesTalles.querySelectorAll(".modal-boton-talle").forEach(item => {
+                    item.classList.remove("seleccionado");
+                });
+
+                boton.classList.add("seleccionado");
+            });
+
+            modalBotonesTalles.appendChild(boton);
+        });
+    } else {
+        const texto = document.createElement("p");
+        texto.className = "modal-sin-talles";
+        texto.textContent = "Consultanos por talles disponibles.";
+        modalBotonesTalles.appendChild(texto);
+    }
+
+    miniaturasModal.innerHTML = "";
+
+    imagenes.forEach((url, i) => {
+        const botonMiniatura = document.createElement("button");
+        botonMiniatura.type = "button";
+        botonMiniatura.className = "miniatura-modal";
+        botonMiniatura.innerHTML = `<img src="${escaparHTML(url)}" alt="Miniatura ${i + 1}">`;
+
+        botonMiniatura.addEventListener("click", () => {
+            indiceImagenModal = i;
+            actualizarImagenModal();
+        });
+
+        miniaturasModal.appendChild(botonMiniatura);
+    });
+
+    modalAgregarCarrito.onclick = () => {
+        if (talles.length > 0 && !talleModalSeleccionado) {
+            mostrarNotificacion("Seleccioná un talle");
+            return;
+        }
+
+        agregarAlCarrito({
+            id: producto.id,
+            nombre: producto.nombre,
+            precio: Number(producto.precio),
+            imagen: imagenes[0],
+            talle: talleModalSeleccionado || "Consultar"
+        });
+
+        cerrarModalProductoDetalle();
+    };
+
+    actualizarImagenModal();
+
+    fondoModalProducto.classList.add("activo");
+    modalProducto.classList.add("activo");
+    document.body.style.overflow = "hidden";
+}
+
+function cerrarModalProductoDetalle() {
+    fondoModalProducto.classList.remove("activo");
+    modalProducto.classList.remove("activo");
+    document.body.style.overflow = "";
+}
+
+botonCerrarModalProducto.addEventListener("click", cerrarModalProductoDetalle);
+fondoModalProducto.addEventListener("click", cerrarModalProductoDetalle);
+
+modalAnterior.addEventListener("click", () => {
+    if (!productoModalActual) return;
+
+    const imagenes = obtenerImagenes(productoModalActual);
+    indiceImagenModal = (indiceImagenModal - 1 + imagenes.length) % imagenes.length;
+    actualizarImagenModal();
+});
+
+modalSiguiente.addEventListener("click", () => {
+    if (!productoModalActual) return;
+
+    const imagenes = obtenerImagenes(productoModalActual);
+    indiceImagenModal = (indiceImagenModal + 1) % imagenes.length;
+    actualizarImagenModal();
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        cerrarModalProductoDetalle();
+    }
+});
 
 // ==========================================
 // MENÚ
