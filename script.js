@@ -30,6 +30,18 @@ const productosCarrito = document.getElementById("productosCarrito");
 const totalCarrito = document.getElementById("totalCarrito");
 const finalizarCompra = document.getElementById("finalizarCompra");
 const notificacion = document.getElementById("notificacion");
+const fondoModalProducto = document.getElementById("fondoModalProducto");
+const modalProducto = document.getElementById("modalProducto");
+const botonCerrarModalProducto = document.getElementById("botonCerrarModalProducto");
+const modalImagenPrincipal = document.getElementById("modalImagenPrincipal");
+const miniaturasModal = document.getElementById("miniaturasModal");
+const modalNombreProducto = document.getElementById("modalNombreProducto");
+const modalPrecioProducto = document.getElementById("modalPrecioProducto");
+const modalTituloTalles = document.getElementById("modalTituloTalles");
+const modalBotonesTalles = document.getElementById("modalBotonesTalles");
+const modalAgregarCarrito = document.getElementById("modalAgregarCarrito");
+const modalAnterior = document.getElementById("modalAnterior");
+const modalSiguiente = document.getElementById("modalSiguiente");
 
 
 // ==========================================
