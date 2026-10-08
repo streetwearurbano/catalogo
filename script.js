@@ -476,7 +476,7 @@ finalizarCompra.addEventListener("click", () => {
         "¿Me confirman stock?"
     ].join("\n");
 
-    const numero = "5493705026329";
+  const numero = "5493704991434";
     window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`, "_blank");
 });
 
