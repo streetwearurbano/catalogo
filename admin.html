@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Streetwear Urbano</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <main>
+        <section id="login-admin">
+            <img src="logo.jpeg" alt="Streetwear Urbano" class="logo-login-admin">
+            <h1>Panel de administración</h1>
+
+            <form id="form-login">
+                <input type="email" id="email" placeholder="Correo electrónico" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit">Ingresar</button>
+            </form>
+
+            <p id="mensaje-login"></p>
+        </section>
+
+        <section id="panel-admin" style="display: none;">
+            <section class="admin-banner">
+                <img src="logo.jpeg" alt="Streetwear Urbano">
+            </section>
+
+            <h1>Administrar productos</h1>
+            <button id="cerrar-sesion">Cerrar sesión</button>
+
+            <h2 id="titulo-formulario">Agregar producto</h2>
+
+            <form id="form-producto">
+                <input type="text" id="nombre" placeholder="Nombre del producto" required>
+
+                <input type="number" id="precio" placeholder="Precio" min="0" step="0.01" required>
+
+                <select id="categoria" required>
+                    <option value="">Seleccionar categoría</option>
+                    <option value="conjuntos">Conjuntos</option>
+                    <option value="remeras">Remeras</option>
+                    <option value="bermudas">Shorts</option>
+                    <option value="buzos">Camperas</option>
+                    <option value="pantalones">Jeans</option>
+                    <option value="accesorios">Accesorios</option>
+                    <option value="calzado">Calzado</option>
+                </select>
+
+                <input type="text" id="talles" placeholder="Talles disponibles. Ej: S, M, L, XL" required>
+
+                <div class="campo-imagen campo-completo">
+                    <label for="imagen" class="label-imagen">Fotos del producto</label>
+
+                    <input type="file" id="imagen" accept="image/*" multiple>
+
+                    <span id="texto-imagen">
+                        Podés seleccionar varias fotos a la vez. La primera será la portada.
+                    </span>
+
+                    <div id="galeria-edicion" class="galeria-edicion"></div>
+                </div>
+
+                <label class="campo-destacado">
+                    <input type="checkbox" id="destacado">
+                    Producto destacado
+                </label>
+
+                <button type="submit" id="boton-guardar">Agregar producto</button>
+
+                <button type="button" id="cancelar-edicion" style="display: none;">
+                    Cancelar edición
+                </button>
+            </form>
+
+            <p id="mensaje-producto"></p>
+
+            <h2>Productos</h2>
+            <div id="lista-productos"></div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
