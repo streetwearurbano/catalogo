@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto | Streetwear Urbano</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .header {
+            min-height: 95px;
+            border-bottom: 1px solid #252525;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 6%;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 145px;
+            height: 70px;
+            object-fit: contain;
+        }
+
+        .volver {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 12px 16px;
+        }
+
+        .volver:hover {
+            border-color: #ff1717;
+            color: #ff1717;
+        }
+
+        .detalle {
+            max-width: 1250px;
+            margin: 50px auto;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 55px;
+        }
+
+        .imagen-grande {
+            position: relative;
+            height: 620px;
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .imagen-grande img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: zoom-in;
+        }
+
+        .imagen-grande img.zoom {
+            object-fit: cover;
+            transform: scale(1.6);
+            cursor: zoom-out;
+        }
+
+        .flecha {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 42px;
+            height: 50px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 34px;
+            cursor: pointer;
+        }
+
+        .anterior {
+            left: 10px;
+        }
+
+        .siguiente {
+            right: 10px;
+        }
+
+        .miniaturas {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .miniatura {
+            width: 78px;
+            height: 90px;
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .miniatura.activa {
+            border-color: #ff1717;
+        }
+
+        .miniatura img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .informacion {
+            padding-top: 15px;
+        }
+
+        .informacion h1 {
+            color: #ff1717;
+            font-size: 34px;
+            line-height: 1.25;
+            margin-bottom: 20px;
+        }
+
+        .precio {
+            color: #ff1717;
+            font-size: 31px;
+            margin-bottom: 26px;
+        }
+
+        .descripcion {
+            color: #bbb;
+            font-size: 15px;
+            line-height: 1.7;
+            white-space: pre-line;
+            margin-bottom: 25px;
+        }
+
+        .titulo-seccion {
+            color: #ddd;
+            font-size: 15px;
+            margin-bottom: 13px;
+        }
+
+        .talles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .talle {
+            min-width: 48px;
+            padding: 12px 15px;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #0d0d0d;
+            cursor: pointer;
+        }
+
+        .talle:hover {
+            border-color: #ff1717;
+        }
+
+        .talle.seleccionado {
+            background: #ff1717;
+            border-color: #ff1717;
+        }
+
+        .cantidad {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #555;
+            border-radius: 5px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .cantidad button {
+            width: 47px;
+            height: 45px;
+            background: #111;
+            color: white;
+            border: none;
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .cantidad span {
+            min-width: 50px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .agregar {
+            display: block;
+            width: 100%;
+            max-width: 440px;
+            padding: 18px;
+            background: #ff1717;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .agregar:hover {
+            background: #d91414;
+        }
+
+        .mensaje {
+            color: #fff;
+            margin-top: 20px;
+            font-size: 15px;
+            min-height: 22px;
+        }
+
+        .mensaje.error {
+            color: #ff1717;
+        }
+
+        .enlace-carrito {
+            display: none;
+            margin-top: 12px;
+            color: #ff1717;
+            text-decoration: underline;
+        }
+
+        .estado {
+            max-width: 1250px;
+            margin: 50px auto;
+            padding: 0 30px;
+        }
+
+        @media (max-width: 800px) {
+            .header {
+                padding: 10px 20px;
+            }
+
+            .logo {
+                width: 115px;
+            }
+
+            .detalle {
+                grid-template-columns: 1fr;
+                margin: 20px auto 45px;
+                padding: 0 15px;
+                gap: 25px;
+            }
+
+            .imagen-grande {
+                height: 440px;
+            }
+
+            .informacion {
+                padding-top: 0;
+            }
+
+            .informacion h1 {
+                font-size: 26px;
+            }
+
+            .precio {
+                font-size: 26px;
+            }
+
+            .agregar {
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .imagen-grande {
+                height: 340px;
+            }
+
+            .miniatura {
+                width: 65px;
+                height: 75px;
+            }
+
+            .volver {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="index.html">
+            <img src="logo.jpeg" alt="Streetwear Urbano" class="logo">
+        </a>
+
+        <a href="index.html" class="volver">
+            ← VOLVER A LA TIENDA
+        </a>
+    </header>
+
+    <p id="estado" class="estado">Cargando producto...</p>
+
+    <main id="detalle" class="detalle" style="display: none;">
+
+        <section>
+            <div class="imagen-grande">
+                <button id="anterior" class="flecha anterior"
+                        type="button" aria-label="Foto anterior">‹</button>
+
+                <img id="imagenPrincipal" src="logo.jpeg" alt="Producto">
+
+                <button id="siguiente" class="flecha siguiente"
+                        type="button" aria-label="Foto siguiente">›</button>
+            </div>
+
+            <div id="miniaturas" class="miniaturas"></div>
+        </section>
+
+        <section class="informacion">
+            <h1 id="nombreProducto"></h1>
+
+            <p id="precioProducto" class="precio"></p>
+
+            <p id="descripcionProducto" class="descripcion"
+               style="display: none;"></p>
+
+            <p id="tituloTalles" class="titulo-seccion">
+                Seleccioná un talle
+            </p>
+
+            <div id="tallesProducto" class="talles"></div>
+
+            <p class="titulo-seccion">Cantidad</p>
+
+            <div class="cantidad">
+                <button id="restar" type="button" aria-label="Restar cantidad">−</button>
+                <span id="numeroCantidad">1</span>
+                <button id="sumar" type="button" aria-label="Sumar cantidad">+</button>
+            </div>
+
+            <button id="agregarCarrito" class="agregar" type="button">
+                AGREGAR AL CARRITO
+            </button>
+
+            <p id="mensaje" class="mensaje" role="status"></p>
+
+            <a href="index.html" id="enlaceCarrito" class="enlace-carrito">
+                VOLVER A LA TIENDA Y VER EL CARRITO
+            </a>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const supabaseClient = supabase.createClient(
+            "https://vxaaqvdizewthswnczyo.supabase.co",
+            "sb_publishable_yOk2GHKWL-CMb_HKOil2IQ_--bUiqVy"
+        );
+
+        const parametros = new URLSearchParams(window.location.search);
+        const idProducto = parametros.get("id");
+
+        let productoActual = null;
+        let imagenes = [];
+        let indiceImagen = 0;
+        let talleSeleccionado = "";
+        let cantidad = 1;
+
+        const estado = document.getElementById("estado");
+        const detalle = document.getElementById("detalle");
+        const imagenPrincipal = document.getElementById("imagenPrincipal");
+        const miniaturas = document.getElementById("miniaturas");
+        const tallesProducto = document.getElementById("tallesProducto");
+        const mensaje = document.getElementById("mensaje");
+
+        function formatearPrecio(valor) {
+            return Number(valor || 0).toLocaleString("es-AR", {
+                maximumFractionDigits: 2
+            });
+        }
+
+        function obtenerImagenes(producto) {
+            let fotos = [];
+
+            if (Array.isArray(producto.imagenes_url)) {
+                fotos = producto.imagenes_url.filter(Boolean);
+            }
+
+            if (fotos.length === 0 && producto.imagen_url) {
+                fotos = [producto.imagen_url];
+            }
+
+            return fotos.length ? fotos : ["logo.jpeg"];
+        }
+
+        function obtenerTalles(producto) {
+            const datos = producto.talles || "";
+
+            if (Array.isArray(datos)) {
+                return datos.map(t => String(t).trim()).filter(Boolean);
+            }
+
+            return String(datos)
+                .split(",")
+                .map(t => t.trim())
+                .filter(Boolean);
+        }
+
+        function actualizarGaleria() {
+            imagenPrincipal.classList.remove("zoom");
+            imagenPrincipal.src = imagenes[indiceImagen];
+
+            document.getElementById("anterior").style.display =
+                imagenes.length > 1 ? "block" : "none";
+
+            document.getElementById("siguiente").style.display =
+                imagenes.length > 1 ? "block" : "none";
+
+            miniaturas.querySelectorAll(".miniatura").forEach((boton, i) => {
+                boton.classList.toggle("activa", i === indiceImagen);
+            });
+        }
+
+        function mostrarGaleria() {
+            miniaturas.innerHTML = "";
+
+            imagenes.forEach((url, i) => {
+                const boton = document.createElement("button");
+                boton.type = "button";
+                boton.className = "miniatura";
+                boton.setAttribute("aria-label", "Ver foto " + (i + 1));
+
+                const img = document.createElement("img");
+                img.src = url;
+                img.alt = "Foto " + (i + 1);
+
+                boton.appendChild(img);
+
+                boton.addEventListener("click", () => {
+                    indiceImagen = i;
+                    actualizarGaleria();
+                });
+
+                miniaturas.appendChild(boton);
+            });
+
+            actualizarGaleria();
+        }
+
+        function mostrarTalles() {
+            const talles = obtenerTalles(productoActual);
+
+            tallesProducto.innerHTML = "";
+
+            if (talles.length === 0) {
+                document.getElementById("tituloTalles").textContent =
+                    "Talles: consultar";
+                return;
+            }
+
+            talles.forEach(talle => {
+                const boton = document.createElement("button");
+                boton.type = "button";
+                boton.className = "talle";
+                boton.textContent = talle;
+
+                boton.addEventListener("click", () => {
+                    talleSeleccionado = talle;
+
+                    tallesProducto.querySelectorAll(".talle").forEach(item => {
+                        item.classList.remove("seleccionado");
+                    });
+
+                    boton.classList.add("seleccionado");
+                    mensaje.textContent = "";
+                });
+
+                tallesProducto.appendChild(boton);
+            });
+        }
+
+        async function cargarProducto() {
+            if (!idProducto) {
+                estado.textContent = "No se indicó ningún producto.";
+                return;
+            }
+
+            const { data, error } = await supabaseClient
+                .from("productos")
+                .select("*")
+                .eq("id", idProducto)
+                .single();
+
+            if (error || !data) {
+                console.error(error);
+                estado.textContent = "No se pudo cargar este producto.";
+                return;
+            }
+
+            productoActual = data;
+            imagenes = obtenerImagenes(data);
+
+            document.title =
+                (data.nombre || "Producto") + " | Streetwear Urbano";
+
+            document.getElementById("nombreProducto").textContent =
+                data.nombre || "Producto";
+
+            document.getElementById("precioProducto").textContent =
+                "$" + formatearPrecio(data.precio);
+
+            const descripcion = document.getElementById("descripcionProducto");
+
+            if (data.descripcion) {
+                descripcion.textContent = data.descripcion;
+                descripcion.style.display = "block";
+            }
+
+            mostrarGaleria();
+            mostrarTalles();
+
+            estado.style.display = "none";
+            detalle.style.display = "grid";
+        }
+
+        document.getElementById("anterior").addEventListener("click", () => {
+            indiceImagen = (indiceImagen - 1 + imagenes.length) % imagenes.length;
+            actualizarGaleria();
+        });
+
+        document.getElementById("siguiente").addEventListener("click", () => {
+            indiceImagen = (indiceImagen + 1) % imagenes.length;
+            actualizarGaleria();
+        });
+
+        imagenPrincipal.addEventListener("click", () => {
+            imagenPrincipal.classList.toggle("zoom");
+        });
+
+        document.getElementById("restar").addEventListener("click", () => {
+            cantidad = Math.max(1, cantidad - 1);
+            document.getElementById("numeroCantidad").textContent = cantidad;
+        });
+
+        document.getElementById("sumar").addEventListener("click", () => {
+            cantidad = Math.min(99, cantidad + 1);
+            document.getElementById("numeroCantidad").textContent = cantidad;
+        });
+
+        document.getElementById("agregarCarrito").addEventListener("click", () => {
+            if (!productoActual) return;
+
+            const talles = obtenerTalles(productoActual);
+
+            if (talles.length > 0 && !talleSeleccionado) {
+                mensaje.textContent = "Primero seleccioná un talle.";
+                mensaje.classList.add("error");
+                return;
+            }
+
+            let carrito = [];
+
+            try {
+                const guardado = JSON.parse(
+                    localStorage.getItem("carritoStreetwear")
+                );
+
+                carrito = Array.isArray(guardado) ? guardado : [];
+            } catch {
+                carrito = [];
+            }
+
+            const talle = talleSeleccionado || "Consultar";
+
+            const existente = carrito.find(item =>
+                item.id === productoActual.id && item.talle === talle
+            );
+
+            if (existente) {
+                existente.cantidad += cantidad;
+            } else {
+                carrito.push({
+                    id: productoActual.id,
+                    nombre: productoActual.nombre,
+                    precio: Number(productoActual.precio),
+                    imagen: imagenes[0],
+                    talle: talle,
+                    cantidad: cantidad
+                });
+            }
+
+            localStorage.setItem(
+                "carritoStreetwear",
+                JSON.stringify(carrito)
+            );
+
+            mensaje.classList.remove("error");
+            mensaje.textContent = "¡Producto agregado al carrito!";
+
+            document.getElementById("enlaceCarrito").style.display =
+                "inline-block";
+        });
+
+        cargarProducto();
+    </script>
+</body>
+</html>
