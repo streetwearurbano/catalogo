@@ -129,6 +129,37 @@
     </div>
 
     <div id="notificacion" class="notificacion"></div>
+    <div class="fondo-modal-producto" id="fondoModalProducto"></div>
+
+<div class="modal-producto" id="modalProducto">
+    <button class="cerrar-modal-producto" id="botonCerrarModalProducto" aria-label="Cerrar">×</button>
+
+    <div class="modal-producto-contenido">
+        <div class="modal-galeria">
+            <div class="modal-galeria-principal">
+                <button type="button" class="modal-flecha modal-flecha-anterior" id="modalAnterior" aria-label="Foto anterior">‹</button>
+                <img id="modalImagenPrincipal" src="logo.jpeg" alt="Producto">
+                <button type="button" class="modal-flecha modal-flecha-siguiente" id="modalSiguiente" aria-label="Foto siguiente">›</button>
+            </div>
+
+            <div class="miniaturas-modal" id="miniaturasModal"></div>
+        </div>
+
+        <div class="modal-info">
+            <h2 id="modalNombreProducto">Producto</h2>
+            <p class="modal-precio" id="modalPrecioProducto">$0</p>
+
+            <div class="modal-zona-talles">
+                <p class="modal-titulo-talles" id="modalTituloTalles">Seleccioná un talle</p>
+                <div class="modal-botones-talles" id="modalBotonesTalles"></div>
+            </div>
+
+            <button type="button" class="agregar-carrito" id="modalAgregarCarrito">
+                AGREGAR AL CARRITO
+            </button>
+        </div>
+    </div>
+</div>
 
     <footer>
         <img src="logo.jpeg" alt="Streetwear Urbano" class="logo-footer">
