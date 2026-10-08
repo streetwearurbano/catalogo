@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -76,6 +77,56 @@
             </button>
         </div>
     </aside>
+
+    <!-- VENTANA DE DETALLE DEL PRODUCTO -->
+    <div id="modalProducto" class="modal-producto" aria-hidden="true">
+        <div class="modal-contenido"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Detalle del producto">
+
+            <button id="cerrarModalProducto"
+                    class="cerrar-modal-producto"
+                    type="button"
+                    aria-label="Cerrar detalle">×</button>
+
+            <div class="modal-galeria">
+                <button id="modalAnterior"
+                        class="modal-flecha"
+                        type="button"
+                        aria-label="Foto anterior">‹</button>
+
+                <img id="modalImagen"
+                     src=""
+                     alt="Imagen del producto">
+
+                <button id="modalSiguiente"
+                        class="modal-flecha"
+                        type="button"
+                        aria-label="Foto siguiente">›</button>
+
+                <span id="modalContador" class="modal-contador"></span>
+            </div>
+
+            <div class="modal-informacion">
+                <h2 id="modalNombre"></h2>
+
+                <p id="modalPrecio" class="precio"></p>
+
+                <p id="modalTituloTalles" class="titulo-talles">
+                    Seleccioná un talle
+                </p>
+
+                <div id="modalTalles" class="botones-talles"></div>
+
+                <button id="modalAgregarCarrito"
+                        class="agregar-carrito"
+                        type="button">
+                    AGREGAR AL CARRITO
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="notificacion" class="notificacion"></div>
 
